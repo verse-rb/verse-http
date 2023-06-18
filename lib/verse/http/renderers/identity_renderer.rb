@@ -1,10 +1,8 @@
 # frozen_string_literal: true
-require "json"
-
 module Verse
   module Http
     module Renderers
-      class JsonRenderer
+      class IdentityRenderer
 
         def render(result, ctx)
           result

@@ -23,8 +23,7 @@ module Verse
       def on_init
         validate_config
 
-        require_relative "exposition/extension"
-        require_relative "http/server"
+        require_relative "../http"
 
         Verse::Exposition::ClassMethods.prepend(
           Verse::Http::Exposition::Extension

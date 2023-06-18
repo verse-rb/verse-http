@@ -30,7 +30,7 @@ module Verse
       @roles = {}
 
       def add_role(name, &block)
-        @roles RoleDSL.new(&block).role
+        @roles[name] = RoleDSL.new(&block).role
       end
 
       def add_strategy(name, &block)

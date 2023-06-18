@@ -3,6 +3,7 @@ require "csv"
 require_relative "../renderers/binary_renderer"
 require_relative "../renderers/stream_renderer"
 require_relative "../renderers/json_renderer"
+require_relative "../renderers/identity_renderer"
 
 module Verse
   module Http
