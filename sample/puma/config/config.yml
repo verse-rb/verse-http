@@ -1,0 +1,6 @@
+service_name: verse-http
+description: testing http plugin
+plugins:
+  - name: http
+logging:
+  level: warn
