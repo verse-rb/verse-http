@@ -34,14 +34,16 @@ module Verse
         end
 
         def render(result, ctx)
-          data = result.body
+          return unless result
 
-          guess_type(data)
+          result.rewind
+
+          guess_type(result)
 
           ctx.content_type @content_type || DEFAULT_CONTENT_TYPE
           ctx.attachment create_attachment_name
 
-          data
+          result
         end
       end
     end
