@@ -8,6 +8,12 @@ RSpec.describe Verse::Http::Auth::Token do
     # @public_key = OpenSSL::PKey::EC.new(@private_key).public_key.to_pem
 
     Verse::Http::Auth::Token.sign_key = ecdsa_key
+
+    Verse::Auth::Context[:user] = %w[
+      read.user.*
+      write.user.*
+    ]
+
   end
 
   subject {
@@ -30,9 +36,8 @@ RSpec.describe Verse::Http::Auth::Token do
         token
       ).to be_a Verse::Http::Auth::Token
 
-      expect(token.user).to eq({ id: 1, name: "John Doe" })
-      expect(token.role).to eq(:user)
-      expect(token.scopes).to eq({ users: [1, 2] })
+      expect(token.context.metadata).to eq({ id: 1, name: "John Doe", role: :user })
+      expect(token.context.custom_scopes).to eq({ users: [1, 2] })
     end
   end
 end
