@@ -27,5 +27,35 @@ RSpec.describe Verse::Http::Renderers::BinaryRenderer do
 
       expect(renderer.render(result, ctx)).to eq io
     end
+
+    it "allows to set custom attachment name" do
+      result = double("result")
+      io = StringIO.new("hello world")
+      expect(result).to receive(:body).and_return(io)
+
+      ctx = double("ctx")
+      expect(ctx).to receive(:content_type).with("application/octet-stream")
+      expect(ctx).to receive(:attachment).with("hello.png")
+
+      renderer.attachment_name = "hello.png"
+
+      expect(renderer.render(result, ctx)).to eq io
+    end
+
+    it "automatically detect content type" do
+      MimeMagic.add('application/mimemagic-test',
+        magic: [[0, 'MAGICTEST']]
+      )
+
+      result = double("result")
+      io = StringIO.new("MAGICTEST")
+      expect(result).to receive(:body).and_return(io)
+
+      ctx = double("ctx")
+      expect(ctx).to receive(:content_type).with("application/mimemagic-test")
+      expect(ctx).to receive(:attachment).with(String)
+
+      renderer.render(result, ctx)
+    end
   end
 end

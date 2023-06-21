@@ -70,9 +70,14 @@ GEM
     json (2.6.3)
     jwt (2.7.1)
     method_source (1.0.0)
+    mimemagic (0.4.3)
+      nokogiri (~> 1)
+      rake
     msgpack (1.7.1)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    nokogiri (1.15.2-x86_64-linux)
+      racc (~> 1.4)
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
@@ -80,6 +85,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
+    racc (1.7.1)
     rack (2.2.7)
     rack-protection (3.0.6)
       rack
@@ -142,6 +148,7 @@ PLATFORMS
 
 DEPENDENCIES
   bootsnap (~> 1.16)
+  mimemagic
   pry
   rack-test
   rake (~> 13.0)

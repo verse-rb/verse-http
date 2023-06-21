@@ -23,11 +23,14 @@ module Verse
         def guess_type(data)
           return unless defined?(MimeMagic)
 
-          detected_content_type = MimeMagic.by_magic(data).type
-          detected_extension = MimeMagic.new(detected_content_type).extensions.first
+          detected_content_type = MimeMagic.by_magic(data)&.type
 
-          @content_type ||= detected_content_type
-          @extension ||= detected_extension
+          if detected_content_type
+            detected_extension = MimeMagic.new(detected_content_type).extensions.first
+
+            @content_type ||= detected_content_type
+            @extension ||= detected_extension
+          end
         end
 
         def render(result, ctx)
