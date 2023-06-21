@@ -4,12 +4,11 @@ module Verse
   module Http
     module Renderers
       class BinaryRenderer
-
         DEFAULT_CONTENT_TYPE = "application/octet-stream"
 
         attr_accessor :attachment_name,
-          :content_type,
-          :extension
+                      :content_type,
+                      :extension
 
         def create_attachment_name
           return @attachment_name if @attachment_name
@@ -25,12 +24,12 @@ module Verse
 
           detected_content_type = MimeMagic.by_magic(data)&.type
 
-          if detected_content_type
-            detected_extension = MimeMagic.new(detected_content_type).extensions.first
+          return unless detected_content_type
 
-            @content_type ||= detected_content_type
-            @extension ||= detected_extension
-          end
+          detected_extension = MimeMagic.new(detected_content_type).extensions.first
+
+          @content_type ||= detected_content_type
+          @guess_type ||= detected_extension
         end
 
         def render(result, ctx)

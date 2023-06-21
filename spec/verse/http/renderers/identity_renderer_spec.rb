@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Verse::Http::Renderers::IdentityRenderer do
   let(:renderer) { Verse::Http::Renderers::IdentityRenderer.new }
 

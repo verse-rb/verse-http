@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 
 module Verse
   module Http
     class Plugin < Verse::Plugin::Base
-
       class << self
         attr_accessor :show_error_details
 
@@ -16,9 +16,7 @@ module Verse
         "Serve HTTP endpoints using Sinatra as HTTP server."
       end
 
-      def validate_config
-
-      end
+      def validate_config; end
 
       def on_init
         validate_config
@@ -31,9 +29,9 @@ module Verse
       end
 
       def on_start(mode)
-        if mode == :server
-          Verse::Http::Server.start!
-        end
+        return unless mode == :server
+
+        Verse::Http::Server.start!
       end
     end
   end

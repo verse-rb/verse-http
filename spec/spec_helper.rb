@@ -18,10 +18,7 @@ Bundler.require
 require "webmock/rspec"
 
 RSpec.configure do |config|
-  whitelist = ['localhost', '127.0.0.1']
-  allowed_sites = lambda{|uri|
-    whitelist.any?{| site| uri.host.include?(site) }
-  }
+  whitelist = ["localhost", "127.0.0.1"]
   WebMock.disable_net_connect!(allow: whitelist)
 
   # Enable flags like --only-failures and --next-failure

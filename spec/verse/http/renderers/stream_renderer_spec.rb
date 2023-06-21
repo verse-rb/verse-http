@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Verse::Http::Renderers::StreamRenderer do
   let(:renderer) { Verse::Http::Renderers::StreamRenderer.new }
 
@@ -10,7 +12,7 @@ RSpec.describe Verse::Http::Renderers::StreamRenderer do
       expect(ctx).to receive(:content_type)
 
       # Fake the streaming system
-      output = ""
+      output = String.new
       expect(ctx).to receive(:stream) do |&block|
         block.call(output)
       end

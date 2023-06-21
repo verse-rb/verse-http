@@ -12,7 +12,6 @@ module Verse
           optional(:bind).filled(:string)
           optional(:show_error_details).filled(:bool)
         end
-
       end
     end
   end

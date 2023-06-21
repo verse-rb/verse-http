@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Verse::Http::Renderers::BinaryRenderer do
   let(:renderer) { Verse::Http::Renderers::BinaryRenderer.new }
 
@@ -25,7 +27,7 @@ RSpec.describe Verse::Http::Renderers::BinaryRenderer do
     end
 
     it "allows to set custom attachment name" do
-      result = double("result")
+      double("result")
       io = StringIO.new("hello world")
 
       ctx = double("ctx")
@@ -38,9 +40,8 @@ RSpec.describe Verse::Http::Renderers::BinaryRenderer do
     end
 
     it "automatically detect content type" do
-      MimeMagic.add('application/mimemagic-test',
-        magic: [[0, 'MAGICTEST']]
-      )
+      MimeMagic.add("application/mimemagic-test",
+                    magic: [[0, "MAGICTEST"]])
 
       io = StringIO.new("MAGICTEST")
 

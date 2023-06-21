@@ -1,5 +1,8 @@
+inherit_from:
+  - https://relaxed.ruby.style/rubocop.yml
+
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.7
 
 Style/StringLiterals:
   Enabled: true
@@ -8,6 +11,9 @@ Style/StringLiterals:
 Style/StringLiteralsInInterpolation:
   Enabled: true
   EnforcedStyle: double_quotes
+
+Style/AccessModifierDeclarations:
+  Enabled: false
 
 Layout/LineLength:
   Max: 120

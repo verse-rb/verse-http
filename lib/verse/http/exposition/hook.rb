@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "csv"
 
 require_relative "../renderers/binary_renderer"
@@ -83,7 +85,6 @@ module Verse
             end
           end
         end
-
       end
     end
   end

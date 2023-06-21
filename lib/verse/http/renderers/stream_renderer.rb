@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 module Verse
   module Http
     module Renderers
@@ -20,7 +19,7 @@ module Verse
         attr_accessor :content_type
 
         def render(result, ctx)
-          ctx.content_type self.content_type
+          ctx.content_type content_type
 
           return unless result
 
@@ -37,7 +36,6 @@ module Verse
             out
           end
         end
-
       end
     end
   end

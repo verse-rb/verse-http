@@ -26,18 +26,18 @@ module Verse
 
           # If the body is not a hash, we merge it into the params hash
           # under the special key _body
-          if body_params.is_a?(Hash)
-            self.params = body_params.merge(params)
-          else
-            self.params = params.merge({_body: body_params})
-          end
+          self.params = if body_params.is_a?(Hash)
+                          body_params.merge(params)
+                        else
+                          params.merge({ _body: body_params })
+                        end
         else
           # Store the body as string into the params hash
-          self.params = params.merge({_body: request.body.read})
+          self.params = params.merge({ _body: request.body.read })
         end
 
         # Default output to application/json.
-        unless self.content_type
+        unless content_type
           content_type "application/json"
         end
       end

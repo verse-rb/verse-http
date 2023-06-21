@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Verse
   module Http
     module Auth
@@ -11,18 +13,16 @@ module Verse
             request.cookies["authorization"]
           }
 
-          if authorization
-            raise "TODO"
-          else
-            auth_context = Verse::Auth::Context[:anonymous]
-          end
+          raise "TODO" if authorization
+
+          auth_context = Verse::Auth::Context[:anonymous]
 
           env["auth_context"] = auth_context
 
           block.call(auth_context)
         end,
 
-        none: proc do |env, &block|
+        none: proc do |_env, &block|
           block.call(Verse::Auth::Context[:anonymous])
         end
       }
@@ -40,7 +40,6 @@ module Verse
       def get(name)
         @strategies.fetch(name || :none)
       end
-
     end
   end
 end

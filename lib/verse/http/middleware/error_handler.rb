@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "./with_renderer"
 
 module Verse
@@ -22,7 +24,7 @@ module Verse
           def flavor_rescue_from(class_name, &block)
             handler = @handlers[class_name]
 
-            flavored_handler = -> (err) do
+            flavored_handler = ->(err) do
               instance_exec(err){ block.call(&handler) }
             end
 
@@ -30,7 +32,7 @@ module Verse
           end
         end
 
-        def initialize(app) # rubocop:disable Lint/MissingSuper
+        def initialize(app)
           @app = app
         end
 

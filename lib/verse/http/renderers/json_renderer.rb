@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "json"
 
 module Verse
@@ -13,7 +14,7 @@ module Verse
 
         attr_accessor :pretty
 
-        def initialize(pretty = self.class.pretty)
+        def initialize(_pretty = self.class.pretty)
           @pretty = self.class.pretty
         end
 
@@ -26,7 +27,6 @@ module Verse
             result.to_json
           end
         end
-
       end
     end
   end

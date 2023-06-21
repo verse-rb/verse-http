@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../error_handler"
 
 Verse::Http::Middleware::ErrorHandler.rescue_from Verse::Error::Base do |e|
@@ -12,7 +14,7 @@ Verse::Http::Middleware::ErrorHandler.rescue_from Verse::Error::Base do |e|
 
   render JSON.pretty_generate(errors: [{
     status: e.class.http_code.to_s,
-    type: 'ms_error',
+    type: "ms_error",
     code: e.class.code.to_s,
     title: error_key,
     detail: details_hash,

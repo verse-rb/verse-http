@@ -1,14 +1,16 @@
-current_env = ENV["APP_ENVIRONMENT"] ||= "development"
-require 'dotenv'
+# frozen_string_literal: true
 
-Dotenv.load('.env', ".env.#{current_env}")
+current_env = ENV["APP_ENVIRONMENT"] ||= "development"
+require "dotenv"
+
+Dotenv.load(".env", ".env.#{current_env}")
 
 require "bundler"
 Bundler.require(:default, current_env)
 
-ENV["APP_PATH"] = File.expand_path("../..", __FILE__)
+ENV["APP_PATH"] = File.expand_path("..", __dir__)
 
-require 'zeitwerk'
+require "zeitwerk"
 
 loader = Zeitwerk::Loader.new
 loader.push_dir("#{ENV["APP_PATH"]}/lib")

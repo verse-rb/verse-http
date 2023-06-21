@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Verse::Http::Server do
   let(:app) { Verse::Http::Server }
 
@@ -15,5 +17,4 @@ RSpec.describe Verse::Http::Server do
       expect(last_response.status).to eq 200
     end
   end
-
 end

@@ -1,14 +1,15 @@
 # frozen_string_literal: true
-ruby '3.1.0'
+
+ruby "3.1.0"
 
 source "https://rubygems.org"
 
 git_source(:github) { |repo| "git@github.com:#{repo}.git" }
 
-gem 'dotenv'
-gem 'zeitwerk', require: false
+gem "dotenv"
 gem "verse-core", github: "verse-rb/verse-core", branch: "master"
 gem "verse-http", path: "../.."
+gem "zeitwerk", require: false
 
-gem 'puma'
+gem "puma"
 gem "rake"
