@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Verse::Http::Renderers::BinaryRenderer do
-  let(:renderer) { Verse::Http::Renderers::BinaryRenderer.new }
+RSpec.describe Verse::Http::Renderer::Binary do
+  let(:renderer) { Verse::Http::Renderer::Binary.new }
 
   describe "#render" do
     it "returns the result" do

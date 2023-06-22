@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Verse::Http::Renderers::StreamRenderer do
-  let(:renderer) { Verse::Http::Renderers::StreamRenderer.new }
+RSpec.describe Verse::Http::Renderer::Stream do
+  let(:renderer) { Verse::Http::Renderer::Stream.new }
 
   describe "#render" do
     it "returns the result" do

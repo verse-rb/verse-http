@@ -4,8 +4,8 @@ require "json"
 
 module Verse
   module Http
-    module Renderers
-      class JsonRenderer
+    module Renderer
+      class Json
         @pretty = true
 
         class << self
@@ -28,6 +28,8 @@ module Verse
           end
         end
       end
+
+      self[:json] = Json
     end
   end
 end

@@ -2,30 +2,15 @@
 
 require "csv"
 
-require_relative "../renderers/binary_renderer"
-require_relative "../renderers/stream_renderer"
-require_relative "../renderers/json_renderer"
-require_relative "../renderers/identity_renderer"
-
 module Verse
   module Http
     module Exposition
-      class Hook
-        attr_reader :method, :path, :auth
+      class Hook < Verse::Exposition::Hook::Base
+        attr_reader :http_method, :path, :auth, :renderer
 
-        @renderers = {
-          json: Renderers::JsonRenderer,
-          binary: Renderers::BinaryRenderer,
-          stream: Renderers::StreamRenderer,
-          nil: Renderers::IdentityRenderer,
-        }
+        def initialize(exposition, http_method, path, auth: :default, renderer: nil)
+          super(exposition)
 
-        class << self
-          # you can add your own renderers in this list
-          attr_reader :renderers
-        end
-
-        def initialize(exposition, method, path, auth: :default, renderer: nil)
           renderer ||= exposition.renderer
 
           root = exposition.http_path || "/"
@@ -41,34 +26,28 @@ module Verse
               [root, path].join("/")
             end
 
-          @method = method
+          @http_method = http_method.to_sym
           @renderer = renderer
 
-          raise "invalid http method: `#{method}`" unless %i[get post patch delete put].include?(method)
+          raise "invalid http method: `#{@http_method}`" unless %i[get post patch delete put].include?(@http_method)
         end
 
-        def register(exposition_class, block, meta)
-          auth = @auth
-          renderer = @renderer
-          method = @method
-          expo_method_name = block.original_name
+        def register_impl
           hook = self
 
-          Verse::Http::Server.send(method, @path) do
-            auth.call(env) do |auth_context|
-              safe_params = meta.process_input(params)
+          Verse::Http::Server.send(http_method, @path) do
+            hook.auth.call(env) do |auth_context|
+              safe_params = hook.metablock.process_input(params)
 
               # fetch renderer
-              renderer_class = Verse::Exposition::Type::Http.renderers.fetch(renderer) do |value|
+              renderer_class = Verse::Http::Renderer[hook.renderer] do |value|
                 raise "Unknown renderer: `#{value}`"
               end
 
               renderer_instance = renderer_class.new
 
-              exposition = exposition_class.new(
+              exposition = hook.create_exposition(
                 auth_context,
-                expo_method_name,
-                hook,
                 env: env,
                 unsafe_params: params,
                 params: safe_params,
@@ -76,11 +55,10 @@ module Verse
               )
 
               result = exposition.run do
-                metadata = service&.metadata
-                metadata[:expo] = "#{exposition_class.name}##{block.original_name}" if metadata
-                block.bind(self).call
+                hook.method.bind(self).call
               end
 
+              hook.metablock.process_output(result)
               renderer_instance.render(result, self)
             end
           end

@@ -2,8 +2,8 @@
 
 module Verse
   module Http
-    module Renderers
-      class BinaryRenderer
+    module Renderer
+      class Binary
         DEFAULT_CONTENT_TYPE = "application/octet-stream"
 
         attr_accessor :attachment_name,
@@ -45,6 +45,8 @@ module Verse
           result
         end
       end
+
+      self[:binary] = Binary
     end
   end
 end

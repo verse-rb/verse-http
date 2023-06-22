@@ -2,8 +2,8 @@
 
 module Verse
   module Http
-    module Renderers
-      class StreamRenderer
+    module Renderer
+      class Stream
         DEFAULT_CONTENT_TYPE = "application/octet-stream"
 
         @buffer_size = 8192
@@ -37,6 +37,8 @@ module Verse
           end
         end
       end
+
+      self[:stream] = Stream
     end
   end
 end

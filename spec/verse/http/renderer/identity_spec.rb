@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Verse::Http::Renderers::IdentityRenderer do
-  let(:renderer) { Verse::Http::Renderers::IdentityRenderer.new }
+RSpec.describe Verse::Http::Renderer::Identity do
+  let(:renderer) { Verse::Http::Renderer::Identity.new }
 
   describe "#render" do
     it "returns the result" do
