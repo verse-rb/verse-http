@@ -10,7 +10,7 @@ module Verse
 
         def fetch(rolename)
           Verse::Auth::Context.roles.fetch(rolename.to_sym) do
-            raise "Role #{rolename} not set"
+            raise "Role `#{rolename}` not set"
           end
         end
       end

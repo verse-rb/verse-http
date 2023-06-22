@@ -1,20 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Verse::Http::Auth::Token do
-  before do
-    # Generate Private/public key pair:
-    ecdsa_key = OpenSSL::PKey::EC.generate("prime256v1")
-    # @private_key = ecdsa_key.to_pem
-    # @public_key = OpenSSL::PKey::EC.new(@private_key).public_key.to_pem
-
-    Verse::Http::Auth::Token.sign_key = ecdsa_key
-
-    Verse::Auth::Context[:user] = %w[
-      read.user.*
-      write.user.*
-    ]
-  end
-
   subject {
     Verse::Http::Auth::Token.encode(
       { id: 1, name: "John Doe" },

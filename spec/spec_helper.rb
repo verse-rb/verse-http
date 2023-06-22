@@ -18,6 +18,18 @@ Bundler.require
 require "webmock/rspec"
 
 RSpec.configure do |config|
+  # Generate Private/public key pair:
+  ecdsa_key = OpenSSL::PKey::EC.generate("prime256v1")
+
+  # Use the key pair to sign and verify JWT tokens:
+  Verse::Http::Auth::Token.sign_key = ecdsa_key
+
+  # set a dummy role for testing
+  Verse::Auth::Context[:user] = %w[
+    read.user.*
+    write.user.*
+  ]
+
   whitelist = ["localhost", "127.0.0.1"]
   WebMock.disable_net_connect!(allow: whitelist)
 

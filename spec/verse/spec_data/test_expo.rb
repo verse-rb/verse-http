@@ -5,10 +5,11 @@ class TestExpo < Verse::Exposition::Base
 
   expose on_http(:get, "/identity", renderer: :identity)
   def endpoint_identity
+    auth_context.mark_as_checked!
     "hello world"
   end
 
-  expose on_http(:get, "/no_auth", auth: :none)
+  expose on_http(:get, "/no_auth", auth: nil)
   def endpoint_no_auth
     "hello world"
   end

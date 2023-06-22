@@ -13,6 +13,7 @@ Verse::Http::Middleware::ErrorHandler.rescue_from do |e|
     code: error_code,
     details: (if Verse::Http::Plugin.show_error_details?
                 {
+                  class: e.class.to_s,
                   message: e.message,
                   backtrace: e.backtrace
                 }

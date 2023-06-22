@@ -36,18 +36,59 @@ RSpec.describe Verse::Http::Server do
   end
 
   describe "exposed endpoints" do
-    it "test the identity renderer" do
-      get "/test/identity"
+    let(:authorization_token) {
+      Verse::Http::Auth::Token.encode(
+        { id: 1, name: "toto" }, "user", { users: 1 }
+      )
+    }
 
-      expect(last_response.status).to eq 200
-      expect(last_response.body).to eq "hello world"
+    let(:expired_authorization_token) {
+      Verse::Http::Auth::Token.encode(
+        { id: 1, name: "toto" }, "user", { users: 1 }, exp: Time.now.to_i - 1000
+      )
+    }
+
+    context "authorization check (identity renderer)" do
+      it "returns 401 UNAUTHORIZED" do
+        get "/test/identity"
+
+        expect(last_response.status).to eq 401
+      end
+
+      it "returns 401 if token is expired" do
+        get "/test/identity", {}, {
+          "HTTP_AUTHORIZATION" => "Bearer #{expired_authorization_token}"
+        }
+
+        expect(last_response.status).to eq 401
+      end
+
+      it "returns 200 OK" do
+        get "/test/identity", {}, {
+          "HTTP_AUTHORIZATION" => "Bearer #{authorization_token}"
+        }
+
+        expect(last_response.status).to eq 200
+        expect(last_response.body).to eq "hello world"
+      end
+
+      it "returns 200 OK with cookie" do
+        clear_cookies
+        set_cookie "authorization=#{authorization_token}"
+
+        get "/test/identity", {}
+
+        expect(last_response.status).to eq 200
+      end
     end
 
     it "test the no auth renderer" do
       get "/test/no_auth"
 
+      puts last_response.body
+
       expect(last_response.status).to eq 200
-      expect(last_response.body).to eq "hello world"
+      expect(last_response.body).to eq "\"hello world\""
     end
   end
 end

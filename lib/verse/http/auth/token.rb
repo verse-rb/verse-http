@@ -41,19 +41,22 @@ module Verse
             )
 
             new(payload)
+          rescue JWT::DecodeError => e
+            raise Verse::Error::Authorization, e.message
           end
 
           # Encode a token.
           # @param user [Hash] The user metadata.
           # @param role [Symbol] The user role.
           # @param scopes [Hash] The user scopes.
-          # @param opts [Hash] Options to pass to the JWT library.
+          # @param opts [Hash] Extra keys to the payload
           def encode(user, role, scopes, **opts)
             JWT.encode({
                          u: user,
                          r: role,
-                         s: scopes
-                       }, sign_key, sign_algorithm, opts)
+                         s: scopes,
+                         **opts
+                       }, sign_key, sign_algorithm)
           end
         end
 
