@@ -70,7 +70,7 @@ module Verse
             @context = Verse::Auth::Context.new(
               rights,
               custom_scopes: deep_symbolize_keys(scopes),
-              metadata: {**deep_symbolize_keys(user), role: role.to_sym}
+              metadata: { **deep_symbolize_keys(user), role: role.to_sym }
             )
           end
         end

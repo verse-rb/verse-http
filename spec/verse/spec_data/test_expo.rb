@@ -1,5 +1,6 @@
-class TestExpo < Verse::Exposition::Base
+# frozen_string_literal: true
 
+class TestExpo < Verse::Exposition::Base
   http_path "/test"
 
   expose on_http(:get, "/identity", renderer: :identity)
@@ -11,5 +12,4 @@ class TestExpo < Verse::Exposition::Base
   def endpoint_no_auth
     "hello world"
   end
-
 end

@@ -39,15 +39,12 @@ RSpec.describe Verse::Http::Server do
     it "test the identity renderer" do
       get "/test/identity"
 
-
       expect(last_response.status).to eq 200
       expect(last_response.body).to eq "hello world"
     end
 
     it "test the no auth renderer" do
       get "/test/no_auth"
-
-      binding.pry
 
       expect(last_response.status).to eq 200
       expect(last_response.body).to eq "hello world"

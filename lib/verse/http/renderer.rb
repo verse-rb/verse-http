@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Verse
   module Http
     module Renderer
@@ -27,4 +29,3 @@ module Verse
     require_relative "renderer/stream"
   end
 end
-

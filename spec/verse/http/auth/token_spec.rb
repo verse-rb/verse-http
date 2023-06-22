@@ -13,7 +13,6 @@ RSpec.describe Verse::Http::Auth::Token do
       read.user.*
       write.user.*
     ]
-
   end
 
   subject {
