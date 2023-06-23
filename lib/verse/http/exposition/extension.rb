@@ -58,7 +58,7 @@ module Verse
         #   end
         #  end
         def on_http(method, path = "", **opts)
-          Hook.new(self, method, path, {renderer: @renderer, **opts} )
+          Hook.new(self, method, path, renderer: @renderer, **opts)
         end
       end
     end
