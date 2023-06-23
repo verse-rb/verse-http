@@ -32,6 +32,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and deploy YARD
     steps:
+      - name: Setup git access
+        run: |
+          git config --global url."https://github.com/".insteadOf git@github.com: && \
+          git config --global url."https://".insteadOf git://
       - uses: kachick/deploy-yard-to-pages@v1.3.0
         id: deployment
         # with:
