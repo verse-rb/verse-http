@@ -3,6 +3,11 @@
 module Verse
   module Http
     module Renderer
+      # A renderer used to output binary data
+      # expect the result to be a IO object.
+      # It will set the content type using mime magic
+      # if it is available.
+      # If not, it will default to application/octet-stream.
       class Binary
         DEFAULT_CONTENT_TYPE = "application/octet-stream"
 

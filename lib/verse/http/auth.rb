@@ -42,10 +42,14 @@ module Verse
         end
       }
 
+      # Add a new strategy
+      # @param name [Symbol] the name of the strategy
+      # @param block [Proc] the block used to define the strategy
       def add_strategy(name, &block)
         @strategies[name] = block
       end
 
+      # Get a authentication strategy
       def get(name)
         @strategies.fetch(name)
       end

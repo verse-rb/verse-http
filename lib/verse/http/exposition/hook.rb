@@ -5,9 +5,15 @@ require "csv"
 module Verse
   module Http
     module Exposition
+      # A hook is a single endpoint on the http server
+      # @see Verse::Http::Exposition::Extension#on_http
+      # @see Verse::Exposition::Base#expose
       class Hook < Verse::Exposition::Hook::Base
         attr_reader :http_method, :path, :auth, :renderer
 
+        # Create a new hook
+        # Used internally by the `on_http` method.
+        # @see Verse::Http::Exposition::Extension#on_http
         def initialize(exposition, http_method, path, auth: :default, renderer: nil)
           super(exposition)
 
@@ -32,6 +38,7 @@ module Verse
           raise "invalid http method: `#{@http_method}`" unless %i[get post patch delete put].include?(@http_method)
         end
 
+        # :nodoc:
         def register_impl
           hook = self
 

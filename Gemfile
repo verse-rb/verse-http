@@ -24,3 +24,5 @@ gem "verse-core", github: "verse-rb/verse-core", branch: "master"
 gem "rake", "~> 13.0"
 
 gem "mimemagic"
+
+gem "yard"
