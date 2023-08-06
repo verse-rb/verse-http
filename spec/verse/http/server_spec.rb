@@ -85,8 +85,6 @@ RSpec.describe Verse::Http::Server do
     it "test the no auth renderer" do
       get "/test/no_auth"
 
-      puts last_response.body
-
       expect(last_response.status).to eq 200
       expect(last_response.body).to eq "\"hello world\""
     end

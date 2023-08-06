@@ -12,12 +12,11 @@ gem "rubocop", "~> 1.21"
 
 gem "rack-test"
 gem "rspec", "~> 3.0"
-gem "simplecov"
-gem "webmock"
-
-gem "pry"
 
 gem "bootsnap", "~> 1.16"
+gem "simplecov"
+gem "webmock"
+gem "pry"
 
 gem "verse-core", github: "verse-rb/verse-core", branch: "master"
 
