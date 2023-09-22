@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:verse-rb/verse-core.git
-  revision: a43adb4078b692c1caad311d9d776c3d8075c067
+  revision: ae6b9ade7239555544543b7935b0a46ee31fc174
   branch: master
   specs:
     verse-core (2.0.0)
@@ -15,6 +15,7 @@ PATH
   remote: ../..
   specs:
     verse-http (0.1.0)
+      jwt (~> 2.7.1)
       sinatra (~> 3.0)
 
 GEM
@@ -57,10 +58,11 @@ GEM
       dry-schema (~> 1.8, >= 1.8.0)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
+    jwt (2.7.1)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.9)
-    puma (6.3.0)
+    puma (6.4.0)
       nio4r (~> 2.0)
     rack (2.2.7)
     rack-protection (3.0.6)
@@ -81,7 +83,7 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
-  puma
+  puma (>= 6.3.1)
   rake
   verse-core!
   verse-http!
