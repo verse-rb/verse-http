@@ -30,8 +30,6 @@ module Verse
 
       def on_start(mode)
         return unless mode == :server
-
-        Verse::Http::Server.start!
       end
     end
   end
