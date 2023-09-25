@@ -72,3 +72,14 @@ The flow is:
 2. Load your expositions classes
 3. Register them
 4. Run the server
+
+## Add Cookies support
+
+1. Add the Gem `sinatra-contrib` in your Gemfile.
+2. Create an initializer file (e.g. `config/initializers/cookies.rb`) and add:
+
+```ruby
+require "sinatra/cookies"
+
+Verse::Http::Server.helpers(Sinatra::Cookies)
+```
