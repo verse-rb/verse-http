@@ -58,7 +58,8 @@ module Verse
                 env: env,
                 unsafe_params: params,
                 params: safe_params,
-                renderer: renderer_instance
+                renderer: renderer_instance,
+                server: self,
               )
 
               result = exposition.run do
