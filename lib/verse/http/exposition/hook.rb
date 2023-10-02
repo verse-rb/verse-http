@@ -55,7 +55,7 @@ module Verse
 
               exposition = hook.create_exposition(
                 auth_context,
-                env: env,
+                env:,
                 unsafe_params: params,
                 params: safe_params,
                 renderer: renderer_instance,

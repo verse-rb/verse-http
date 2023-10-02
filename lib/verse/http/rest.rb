@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Verse
   module Http
     module Rest
@@ -53,57 +55,55 @@ module Verse
           raise ArgumentError, "record is required" unless record
 
           inject_exposition(mod,
-            record,
-            show,
-            index,
-            create,
-            update,
-            destroy,
-            extra_filters,
-            blacklist_filters,
-            authorized_included,
-            service
-          )
+                            record,
+                            show,
+                            index,
+                            create,
+                            update,
+                            destroy,
+                            extra_filters,
+                            blacklist_filters,
+                            authorized_included,
+                            service)
         elsif mod < Verse::Service::Base
           inject_service(mod,
-            show,
-            index,
-            create,
-            update,
-            destroy,
-            repository
-          )
+                         show,
+                         index,
+                         create,
+                         update,
+                         destroy,
+                         repository)
         else
           raise "Can be used only on class inheriting from `Verse::Exposition::Base` or `Verse::Service::Base`"
         end
       end
 
       def inject_exposition(mod,
-        record,
-        show,
-        index,
-        create,
-        update,
-        destroy,
-        extra_filters,
-        blacklist_filters,
-        authorized_included,
-        service
-      )
+                            record,
+                            show,
+                            index,
+                            _create,
+                            _update,
+                            _destroy,
+                            extra_filters,
+                            blacklist_filters,
+                            authorized_included,
+                            service)
         inject_expo_show(mod, record, show, service, authorized_included) if show
 
+        return unless index
+
         inject_expo_index(mod, record, index, extra_filters,
-          blacklist_filters, service, authorized_included) if index
+                          blacklist_filters, service, authorized_included)
       end
 
       def inject_service(mod,
-        show,
-        index,
-        create,
-        update,
-        destroy,
-        repository
-      )
+                         show,
+                         index,
+                         create,
+                         _update,
+                         _destroy,
+                         repository)
         inject_service_show(mod, repository) if show
         inject_service_index(mod, repository) if index
         inject_service_create(mod, repository) if create
@@ -112,7 +112,7 @@ module Verse
       # :nodoc:
       def inject_service_show(mod, repository)
         mod.define_method(:show) do |id|
-          send(repository).find_by!({ id: id })
+          send(repository).find_by!({ id: })
         end
       end
 
@@ -126,10 +126,10 @@ module Verse
         mod.define_method(:index) do |filter, included:, page:, items_per_page:, sort:|
           send(repository).index(
             filter,
-            included: included,
-            page: page,
-            items_per_page: items_per_page,
-            sort: sort
+            included:,
+            page:,
+            items_per_page:,
+            sort:
           )
         end
       end
@@ -160,7 +160,7 @@ module Verse
           included = (params[:included] || []) & authorized_included
           send(service).show(
             params[:id],
-            included: included
+            included:
           )
         end
 
@@ -180,6 +180,7 @@ module Verse
             optional(:filter).hash do
               record.fields.each do |field|
                 next if blacklist_filters.include?(field[0])
+
                 optional(field[0])
               end
 
@@ -210,7 +211,6 @@ module Verse
 
         mod.attach_exposition(:index, exposed)
       end
-
     end
   end
 end

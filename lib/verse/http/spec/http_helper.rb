@@ -1,11 +1,11 @@
+# frozen_string_literal: true
 
 module Verse
   module Http
     module Spec
       module HttpHelper
-
         class << self
-          attr_accessor :new_token, :current_user
+          attr_accessor :current_user
 
           # Add a user to the helper.
           # @param name [String] The name of the user.
@@ -13,9 +13,9 @@ module Verse
           # @param metadata [Hash] The metadata of the user.
           # @param scopes [Hash] The scopes of the user.
           def add_user(name, role, metadata = nil, scopes = {})
-            metadata ||= {id: 1, name: name}
+            metadata ||= { id: 1, name: }
             @users ||= {}
-            @users[name.to_sym] = { role: role, metadata: metadata, scopes: scopes }
+            @users[name.to_sym] = { role:, metadata:, scopes: }
           end
 
           # Generate a new token for the given user.
@@ -56,7 +56,6 @@ module Verse
             unflavored_method.call(path, params, headers)
           end
         end
-
       end
     end
   end

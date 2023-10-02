@@ -18,7 +18,7 @@ Verse::Http::Middleware::ErrorHandler.rescue_from Verse::Error::Base do |e|
     code: e.class.code.to_s,
     title: error_key,
     detail: details_hash,
-    source: source,
-    meta: meta
+    source:,
+    meta:
   }.compact]), status: e.class.http_code
 end

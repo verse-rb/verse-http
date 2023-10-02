@@ -5,13 +5,13 @@ require_relative "lib/verse/http/version"
 Gem::Specification.new do |spec|
   spec.name = "verse-http"
   spec.version = Verse::Http::VERSION
-  spec.authors = ["Yacine"]
-  spec.email = ["yacine.petitprez@oivan.com"]
+  spec.authors = ["Yacine Petitprez"]
+  spec.email = ["anykeyh@gmail.com"]
 
   spec.summary = "HTTP Server and Exposition Endpoint for the Verse framework"
   spec.description = "HTTP Server and Exposition Endpoint for the Verse framework"
   spec.homepage = "https://github.com/verse-rb/verse-http"
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.1.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/verse-rb/verse-http"

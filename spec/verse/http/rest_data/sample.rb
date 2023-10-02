@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Spec
   module Rest
     class FooRecord < Verse::Model::Record::Base
@@ -9,6 +11,18 @@ module Spec
 
     class FooRepository < Verse::Model::InMemory::Repository
       resource "verse-http:foo"
+    end
+
+    class BarRecord < Verse::Model::Record::Base
+      field :id, type: Integer
+      field :foo_id, type: Integer
+      field :value, type: String
+
+      belongs_to :foo, repository: FooRepository
+    end
+
+    class BarRepository < Verse::Model::InMemory::Repository
+      resource "verse-http:bar"
     end
 
     class FooService < Verse::Service::Base
@@ -30,22 +44,21 @@ module Spec
       use_service FooService
 
       inject Verse::Http::Rest,
-        record: FooRecord,
-        extra_filters: [
-          "test",
-          [ "data__contains", ->(x) { x.value(:integer) } ]
-        ],
-        blacklist_filters: ["data"]
+             record: FooRecord,
+             extra_filters: [
+               "test",
+               ["data__contains", ->(x) { x.value(:integer) }]
+             ],
+             blacklist_filters: ["data"]
 
-        expose on_http(:get, "activate/:id") do
-          input do
-            required(:id).filled(:integer)
-          end
+      expose on_http(:get, "activate/:id") do
+        input do
+          required(:id).filled(:integer)
         end
-        def activate
-          service.active(params[:id])
-        end
-
+      end
+      def activate
+        service.active(params[:id])
+      end
     end
   end
 end

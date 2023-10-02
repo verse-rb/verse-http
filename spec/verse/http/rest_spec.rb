@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Verse::Http::Rest, type: :exposition do
-
   before do
     Verse.start(
       :test,
@@ -14,17 +13,16 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
 
     Spec::Rest::FooExpo.register
 
-
     # Register a few foo records:
     Spec::Rest::FooRepository.clear
 
     repo = Spec::Rest::FooRepository.new(Verse::Auth::Context[:system])
 
-    repo.create(bar: "1", data: [1,2,3,4], test: "foo")
-    repo.create(bar: "2", data: [1,2,3,4], test: "bar")
-    repo.create(bar: "3", data: [1,2,3,4], test: "bar")
-    repo.create(bar: "4", data: [1,2,3,4], test: "foo")
-    repo.create(bar: "5", data: [1,2,3,8], test: "foo")
+    repo.create(bar: "1", data: [1, 2, 3, 4], test: "foo")
+    repo.create(bar: "2", data: [1, 2, 3, 4], test: "bar")
+    repo.create(bar: "3", data: [1, 2, 3, 4], test: "bar")
+    repo.create(bar: "4", data: [1, 2, 3, 4], test: "foo")
+    repo.create(bar: "5", data: [1, 2, 3, 8], test: "foo")
   end
 
   after do
@@ -42,12 +40,12 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
         get "/foo?page=1&per_page=2"
         expect(last_response.status).to eq(200)
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq({
-          data: [
-            { id: 1, bar: "1", data: [1,2,3,4] },
-            { id: 2, bar: "2", data: [1,2,3,4] }
-          ],
-          metadata: { count: 5 }
-        })
+                                                                              data: [
+                                                                                { id: 1, bar: "1", data: [1, 2, 3, 4] },
+                                                                                { id: 2, bar: "2", data: [1, 2, 3, 4] }
+                                                                              ],
+                                                                              metadata: { count: 5 }
+                                                                            })
       end
 
       it "with sorting" do
@@ -55,27 +53,23 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
         puts last_response.body
         expect(last_response.status).to eq(200)
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq({
-          data: [
-            { id: 4, bar: "4", data: [1,2,3,4] }
-          ],
-          metadata: { count: 5 }
-        })
+                                                                              data: [
+                                                                                { id: 4, bar: "4", data: [1, 2, 3, 4] }
+                                                                              ],
+                                                                              metadata: { count: 5 }
+                                                                            })
       end
 
       it "with special filters" do
         get "/foo?filter[data__contains]=8"
         expect(last_response.status).to eq(200)
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq({
-          data: [
-            { id: 5, bar: "5", data: [1,2,3,8] }
-          ],
-          metadata: { count: 1 }
-        })
+                                                                              data: [
+                                                                                { id: 5, bar: "5", data: [1, 2, 3, 8] }
+                                                                              ],
+                                                                              metadata: { count: 1 }
+                                                                            })
       end
-
     end
-
   end
-
-
 end

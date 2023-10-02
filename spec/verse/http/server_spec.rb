@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Verse::Http::Server, type: :exposition do
-
   before do
     Verse.start(
       :test,
