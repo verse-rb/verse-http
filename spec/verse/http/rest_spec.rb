@@ -138,5 +138,51 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
         )
       end
     end
+
+    context "#show" do
+      it "basic call" do
+        get "/foo/1"
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            id: 1,
+            bar: "1",
+            data: [1, 2, 3, 4]
+          }
+        )
+      end
+
+      it "with included" do
+        get "/foo/1?included[]=bars"
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            id: 1,
+            bar: "1",
+            data: [1, 2, 3, 4],
+            bars: [
+              { id: 1, foo_id: 1, value: "foo" },
+              { id: 2, foo_id: 1, value: "bar" }
+            ]
+          }
+        )
+      end
+    end
+
+    context "#update" do
+      it "basic call" do
+        patch "/foo/1", { bar: "test" }
+        expect(last_response.status).to eq(200)
+
+        get "/foo/1"
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            id: 1,
+            bar: "test",
+            data: [1, 2, 3, 4]
+          }
+        )
+      end
+    end
   end
 end

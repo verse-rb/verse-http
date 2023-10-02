@@ -78,41 +78,36 @@ module Verse
         end
       end
 
-      def inject_exposition(mod,
-                            record,
-                            show,
-                            index,
-                            _create,
-                            _update,
-                            _destroy,
-                            extra_filters,
-                            blacklist_filters,
-                            authorized_included,
-                            service)
-        inject_expo_show(mod, record, show, service, authorized_included) if show
-
-        return unless index
-
-        inject_expo_index(mod, record, index, extra_filters,
+      def inject_exposition(
+        mod, record, show,
+        index, create, update,
+        destroy, extra_filters, blacklist_filters,
+        authorized_included, service
+      )
+        show && inject_expo_show(mod, record, show, service, authorized_included)
+        index && inject_expo_index(mod, record, index, extra_filters,
                           blacklist_filters, service, authorized_included)
+        update && inject_expo_update(mod, record, update, service)
+        create && inject_expo_create(mod, record, create, service)
+        destroy && inject_expo_destroy(mod, record, destroy, service)
       end
 
-      def inject_service(mod,
-                         show,
-                         index,
-                         create,
-                         _update,
-                         _destroy,
-                         repository)
-        inject_service_show(mod, repository) if show
-        inject_service_index(mod, repository) if index
-        inject_service_create(mod, repository) if create
+      def inject_service(
+        mod, show, index,
+        create, update, destroy,
+        repository
+      )
+        show && inject_service_show(mod, repository)
+        index && inject_service_index(mod, repository)
+        create && inject_service_create(mod, repository)
+        update && inject_service_update(mod, repository)
+        destroy && inject_service_destroy(mod, repository)
       end
 
       # :nodoc:
       def inject_service_show(mod, repository)
-        mod.define_method(:show) do |id|
-          send(repository).find_by!({ id: })
+        mod.define_method(:show) do |id, included: []|
+          send(repository).find_by!({ id: }, included:)
         end
       end
 
@@ -123,7 +118,7 @@ module Verse
       end
 
       def inject_service_index(mod, repository)
-        mod.define_method(:index) do |filter, included:, page:, items_per_page:, sort:|
+        mod.define_method(:index) do |filter, included: [], page: 1, items_per_page: 100, sort: nil|
           send(repository).index(
             filter,
             included:,
@@ -149,7 +144,7 @@ module Verse
       # :nodoc:
       def inject_expo_show(mod, record, show_path, service, authorized_included)
         exposed = mod.build_expose mod.on_http(*show_path) do
-          desc "Show data for #{record.name}"
+          desc "Show a record `#{record.name}`"
           input do
             required(:id).value(:integer)
             optional(:included).array(:string)
@@ -174,8 +169,8 @@ module Verse
         exposed = mod.build_expose mod.on_http(*index_path) do
           desc "Index data for #{record.name}"
           input do
-            optional(:page).filled(:integer).value(gt?: 0)
-            optional(:per_page).filled(:integer).value(gt?: 0, lt?: 1001)
+            optional(:page).value(:integer).value(gt?: 0)
+            optional(:per_page).value(:integer).value(gt?: 0, lt?: 1001)
             optional(:sort).value(:string)
             optional(:filter).hash do
               record.fields.each do |field|
@@ -211,6 +206,59 @@ module Verse
 
         mod.attach_exposition(:index, exposed)
       end
+
+      def inject_expo_create(mod, record, create_path, service)
+        exposed = mod.build_expose mod.on_http(*create_path) do
+          desc "Create a new record `#{record.name}`"
+          input do
+            record.fields.each do |field|
+              optional(field[0])
+            end
+          end
+        end
+
+        mod.define_method(:create) do
+          send(service).create(params)
+        end
+
+        mod.attach_exposition(:create, exposed)
+      end
+
+      def inject_expo_update(mod, record, update_path, service)
+        exposed = mod.build_expose mod.on_http(*update_path) do
+          desc "Update a record `#{record.name}`"
+          input do
+            required(record.primary_key).value(:integer)
+
+            record.fields.each do |k, _|
+              next if k == record.primary_key
+              optional(k)
+            end
+          end
+        end
+
+        mod.define_method(:update) do
+          send(service).update(params[:id], params)
+        end
+
+        mod.attach_exposition(:update, exposed)
+      end
+
+      def inject_expo_destroy(mod, record, destroy_path, service)
+        exposed = mod.build_expose mod.on_http(*destroy_path) do
+          desc "Destroy a record `#{record.name}`"
+          input do
+            required(:id).value(:integer)
+          end
+        end
+
+        mod.define_method(:destroy) do
+          send(service).destroy(params[:id])
+        end
+
+        mod.attach_exposition(:destroy, exposed)
+      end
+
     end
   end
 end
