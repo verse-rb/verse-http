@@ -89,8 +89,53 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
 
       it "with included" do
         get "/foo?included[]=bars"
-        binding.pry
         expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            data: [
+              {
+                id: 1,
+                bar: "1",
+                data: [1, 2, 3, 4],
+                bars: [
+                  { id: 1, foo_id: 1, value: "foo" },
+                  { id: 2, foo_id: 1, value: "bar" }
+                ]
+              },
+              {
+                id: 2,
+                bar: "2",
+                data: [1, 2, 3, 4],
+                bars: [
+                  { id: 3, foo_id: 2, value: "foo" },
+                  { id: 4, foo_id: 2, value: "bar" }
+                ]
+              },
+              {
+                id: 3,
+                bar: "3",
+                data: [1, 2, 3, 4],
+                bars: [
+                  { id: 5, foo_id: 3, value: "foo" },
+                  { id: 6, foo_id: 3, value: "bar" }
+                ]
+              },
+              {
+                id: 4,
+                bar: "4",
+                data: [1, 2, 3, 4],
+                bars: []
+              },
+              {
+                id: 5,
+                bar: "5",
+                data: [1, 2, 3, 8],
+                bars: []
+              }
+            ],
+            metadata: { count: 5 }
+          }
+        )
       end
 
     end
