@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:verse-rb/verse-core.git
-  revision: ae6b9ade7239555544543b7935b0a46ee31fc174
+  revision: aabcbfa88c445072019ee63998118a935f3c3b44
   branch: master
   specs:
     verse-core (2.0.0)

@@ -2,8 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Verse::Http::Server do
-  let(:app) { Verse::Http::Server }
+RSpec.describe Verse::Http::Server, type: :exposition do
 
   before do
     Verse.start(
