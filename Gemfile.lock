@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:verse-rb/verse-core.git
-  revision: 771a4483dc4c3616c15364706549168013012a3f
+  revision: 7e3c19dd9f6bd61fc053bef79824786af56cb027
   branch: master
   specs:
     verse-core (2.0.0)
@@ -143,7 +143,7 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     yard (0.9.34)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   x86_64-linux

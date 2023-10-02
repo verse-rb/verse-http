@@ -3,10 +3,12 @@
 module Spec
   module Rest
     class FooRecord < Verse::Model::Record::Base
-      field :id, type: Integer
+      field :id, type: Integer, primary: true
 
       field :bar, type: String
       field :data, type: Array
+
+      has_many :bars, repository: "Spec::Rest::BarRepository"
     end
 
     class FooRepository < Verse::Model::InMemory::Repository
@@ -14,7 +16,8 @@ module Spec
     end
 
     class BarRecord < Verse::Model::Record::Base
-      field :id, type: Integer
+      field :id, type: Integer, primary: true
+
       field :foo_id, type: Integer
       field :value, type: String
 
@@ -22,7 +25,7 @@ module Spec
     end
 
     class BarRepository < Verse::Model::InMemory::Repository
-      resource "verse-http:bar"
+      resource "verse-http:foo/bar"
     end
 
     class FooService < Verse::Service::Base
@@ -49,7 +52,8 @@ module Spec
                "test",
                ["data__contains", ->(x) { x.value(:integer) }]
              ],
-             blacklist_filters: ["data"]
+             blacklist_filters: ["data"],
+             authorized_included: ["bars"]
 
       expose on_http(:get, "activate/:id") do
         input do

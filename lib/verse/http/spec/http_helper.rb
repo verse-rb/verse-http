@@ -30,9 +30,7 @@ module Verse
             }
 
             Verse::Http::Auth::Token.encode(
-              user[:metadata],
-              user[:role],
-              user[:scopes],
+              *user.values_at(:metadata, :role, :scopes),
               exp: Time.now.to_i + 1_000_000
             )
           end
