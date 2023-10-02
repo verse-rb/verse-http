@@ -20,7 +20,7 @@ RSpec.describe Verse::Http::Server, type: :exposition do
 
   describe "200 check" do
     it "returns 200 OK" do
-      get "/"
+      get "/_service"
 
       expect(last_response.status).to eq 200
     end

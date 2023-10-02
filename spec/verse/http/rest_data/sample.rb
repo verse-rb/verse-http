@@ -1,6 +1,8 @@
 module Spec
   module Rest
     class FooRecord < Verse::Model::Record::Base
+      field :id, type: Integer
+
       field :bar, type: String
       field :data, type: Array
     end
@@ -31,13 +33,9 @@ module Spec
         record: FooRecord,
         extra_filters: [
           "test",
-          "bar_lte",
-          "bar_lt",
-          "bar_gt",
-          "bar_gte"
+          [ "data__contains", ->(x) { x.value(:integer) } ]
         ],
         blacklist_filters: ["data"]
-
 
         expose on_http(:get, "activate/:id") do
           input do

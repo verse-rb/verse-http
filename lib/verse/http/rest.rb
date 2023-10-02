@@ -148,35 +148,48 @@ module Verse
 
       # :nodoc:
       def inject_expo_show(mod, record, show_path, service, authorized_included)
-        # expose on_http(*show_path) do
-        #   desc "Show data for #{record.name}"
-        #   input do
-        #     required(:id).value(:integer)
-        #   end
-        # end
-        # def show
-        #   send(service).show(params[:id])
-        # end
+        exposed = mod.build_expose mod.on_http(*show_path) do
+          desc "Show data for #{record.name}"
+          input do
+            required(:id).value(:integer)
+            optional(:included).array(:string)
+          end
+        end
+
+        mod.define_method(:show) do
+          included = (params[:included] || []) & authorized_included
+          send(service).show(
+            params[:id],
+            included: included
+          )
+        end
+
+        mod.attach_exposition(:show, exposed)
       end
 
       # :nodoc:
       def inject_expo_index(mod, record, index_path, extra_filters, blacklist_filters, service, authorized_included)
         blacklist_filters = blacklist_filters.map(&:to_s)
-        extra_filters = extra_filters.map(&:to_s)
 
         exposed = mod.build_expose mod.on_http(*index_path) do
           desc "Index data for #{record.name}"
           input do
-            optional(:page).value(gt?: 0)
-            optional(:per_page).value(gt?: 0, lt?: 1001)
+            optional(:page).filled(:integer).value(gt?: 0)
+            optional(:per_page).filled(:integer).value(gt?: 0, lt?: 1001)
             optional(:sort).value(:string)
             optional(:filter).hash do
               record.fields.each do |field|
                 next if blacklist_filters.include?(field[0])
                 optional(field[0])
               end
+
               extra_filters.each do |field|
-                optional(field.to_sym).maybe(:string)
+                case field
+                when String, Symbol
+                  optional(field.to_sym).maybe(:string)
+                else
+                  field[1].call(optional(field[0].to_sym))
+                end
               end
             end
             optional(:included).array(:string)
