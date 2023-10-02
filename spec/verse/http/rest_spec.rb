@@ -137,7 +137,6 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
           }
         )
       end
-
     end
   end
 end
