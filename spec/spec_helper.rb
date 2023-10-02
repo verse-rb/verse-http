@@ -32,7 +32,7 @@ RSpec.configure do |config|
   Verse::Auth::Context[:user] = %w[
     users.read.*
     users.write.*
-    foos.*.*
+    verse-http:foo.write.*
   ]
 
   whitelist = ["localhost", "127.0.0.1"]

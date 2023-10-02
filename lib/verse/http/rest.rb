@@ -1,6 +1,7 @@
 module Verse
   module Http
     module Rest
+      module_function
 
       # use `inject` on exposition to inject restful routes
       #
@@ -34,7 +35,8 @@ module Verse
       # @param service [Symbol] the name of the service object to be used, default `service`.
       #
       def call(
-        record:,
+        mod,
+        record: nil,
         show: [:get, ":id"],
         index: [:get, ""],
         create: [:post, ""],
@@ -43,68 +45,126 @@ module Verse
         extra_filters: [],
         blacklist_filters: [],
         authorized_included: [],
-        service: :service
+        service: :service,
+        repository: :repo
       )
 
-        instance_exec(
-          record,
-          show,
-          service,
-          authorized_included,
-          &Verse::Http::Rest.instance_method(:inject_show).bind(self)
-        ) if show
+        if mod < Verse::Exposition::Base
+          raise ArgumentError, "record is required" unless record
 
-        instance_exec(
-          record,
-          index,
-          extra_filters,
-          blacklist_filters,
-          service,
-          authorized_included,
-          &Verse::Http::Rest.instance_method(:inject_index).bind(self)
-        ) if index
-
-        # instance_exec(
-        #   record,
-        #   create,
-        #   service,
-        #   &Verse::Http::Rest.instance_method(:inject_create).bind(self)
-        # ) if create
-
-        # instance_exec(
-        #   record,
-        #   update,
-        #   service,
-        #   &Verse::Http::Rest.instance_method(:inject_update).bind(self)
-        # ) if update
-
-        # instance_exec(
-        #   record,
-        #   destroy,
-        #   service,
-        #   &Verse::Http::Rest.instance_method(:inject_destroy).bind(self)
-        # ) if destroy
-      end
-
-      # :nodoc:
-      def inject_show(record, show_path, service, authorized_included)
-        expose on_http(*show_path) do
-          desc "Show data for #{record.name}"
-          input do
-            required(:id).value(:integer)
-          end
-        end
-        def show
-          send(service).show(params[:id])
+          inject_exposition(mod,
+            record,
+            show,
+            index,
+            create,
+            update,
+            destroy,
+            extra_filters,
+            blacklist_filters,
+            authorized_included,
+            service
+          )
+        elsif mod < Verse::Service::Base
+          inject_service(mod,
+            show,
+            index,
+            create,
+            update,
+            destroy,
+            repository
+          )
+        else
+          raise "Can be used only on class inheriting from `Verse::Exposition::Base` or `Verse::Service::Base`"
         end
       end
 
+      def inject_exposition(mod,
+        record,
+        show,
+        index,
+        create,
+        update,
+        destroy,
+        extra_filters,
+        blacklist_filters,
+        authorized_included,
+        service
+      )
+        inject_expo_show(mod, record, show, service, authorized_included) if show
+
+        inject_expo_index(mod, record, index, extra_filters,
+          blacklist_filters, service, authorized_included) if index
+      end
+
+      def inject_service(mod,
+        show,
+        index,
+        create,
+        update,
+        destroy,
+        repository
+      )
+        inject_service_show(mod, repository) if show
+        inject_service_index(mod, repository) if index
+        inject_service_create(mod, repository) if create
+      end
+
       # :nodoc:
-      def inject_index(record, index_path, extra_filters, blacklist_filters, service, authorized_included)
+      def inject_service_show(mod, repository)
+        mod.define_method(:show) do |id|
+          send(repository).find_by!({ id: id })
+        end
+      end
+
+      def inject_service_create(mod, repository)
+        mod.define_method(:create) do |attributes|
+          send(repository).create(attributes)
+        end
+      end
+
+      def inject_service_index(mod, repository)
+        mod.define_method(:index) do |filter, included:, page:, items_per_page:, sort:|
+          send(repository).index(
+            filter,
+            included: included,
+            page: page,
+            items_per_page: items_per_page,
+            sort: sort
+          )
+        end
+      end
+
+      def inject_service_update(mod, repository)
+        mod.define_method(:update) do |id, attributes|
+          send(repository).update!(id, attributes)
+        end
+      end
+
+      def inject_service_destroy(mod, repository)
+        mod.define_method(:destroy) do |id|
+          send(repository).delete!(id)
+        end
+      end
+
+      # :nodoc:
+      def inject_expo_show(mod, record, show_path, service, authorized_included)
+        # expose on_http(*show_path) do
+        #   desc "Show data for #{record.name}"
+        #   input do
+        #     required(:id).value(:integer)
+        #   end
+        # end
+        # def show
+        #   send(service).show(params[:id])
+        # end
+      end
+
+      # :nodoc:
+      def inject_expo_index(mod, record, index_path, extra_filters, blacklist_filters, service, authorized_included)
         blacklist_filters = blacklist_filters.map(&:to_s)
         extra_filters = extra_filters.map(&:to_s)
 
-        exposed = build_expose on_http(*index_path) do
+        exposed = mod.build_expose mod.on_http(*index_path) do
           desc "Index data for #{record.name}"
           input do
             optional(:page).value(gt?: 0)
@@ -123,7 +183,7 @@ module Verse
           end
         end
 
-        define_method(:index) do
+        mod.define_method(:index) do
           included = (params[:included] || []) & authorized_included
 
           send(service).index(
@@ -135,7 +195,7 @@ module Verse
           )
         end
 
-        self.attach_exposition(:index, exposed)
+        mod.attach_exposition(:index, exposed)
       end
 
     end

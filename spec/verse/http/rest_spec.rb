@@ -15,8 +15,8 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
     Spec::Rest::FooExpo.register
   end
 
-  context "routes generation" do
-    it "#index", as: :user do
+  context "routes generation", as: :user do
+    it "#index" do
       get "/foo"
       binding.pry
       expect(last_response.status).to eq(200)
