@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Verse::Http::Rest do
+RSpec.describe Verse::Http::Rest, type: :exposition do
 
   before do
     Verse.start(
@@ -15,7 +15,14 @@ RSpec.describe Verse::Http::Rest do
     Spec::Rest::FooExpo.register
   end
 
-  it "generates the correct routes" do
+  context "routes generation" do
+    it "#index", as: :user do
+      get "/foo"
+      binding.pry
+      expect(last_response.status).to eq(200)
+    end
+
   end
+
 
 end

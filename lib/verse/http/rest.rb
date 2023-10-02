@@ -35,11 +35,11 @@ module Verse
       #
       def call(
         record:,
-        show: [:get, "/:id"],
-        index: [:get, "/"],
-        create: [:post, "/"],
-        update: [:patch, "/:id"],
-        destroy: [:delete, "/:id"],
+        show: [:get, ":id"],
+        index: [:get, ""],
+        create: [:post, ""],
+        update: [:patch, ":id"],
+        destroy: [:delete, ":id"],
         extra_filters: [],
         blacklist_filters: [],
         authorized_included: [],
@@ -64,26 +64,26 @@ module Verse
           &Verse::Http::Rest.instance_method(:inject_index).bind(self)
         ) if index
 
-        instance_exec(
-          record,
-          create,
-          service,
-          &Verse::Http::Rest.instance_method(:inject_create).bind(self)
-        ) if create
+        # instance_exec(
+        #   record,
+        #   create,
+        #   service,
+        #   &Verse::Http::Rest.instance_method(:inject_create).bind(self)
+        # ) if create
 
-        instance_exec(
-          record,
-          update,
-          service,
-          &Verse::Http::Rest.instance_method(:inject_update).bind(self)
-        ) if update
+        # instance_exec(
+        #   record,
+        #   update,
+        #   service,
+        #   &Verse::Http::Rest.instance_method(:inject_update).bind(self)
+        # ) if update
 
-        instance_exec(
-          record,
-          destroy,
-          service,
-          &Verse::Http::Rest.instance_method(:inject_destroy).bind(self)
-        ) if destroy
+        # instance_exec(
+        #   record,
+        #   destroy,
+        #   service,
+        #   &Verse::Http::Rest.instance_method(:inject_destroy).bind(self)
+        # ) if destroy
       end
 
       # :nodoc:
@@ -104,7 +104,7 @@ module Verse
         blacklist_filters = blacklist_filters.map(&:to_s)
         extra_filters = extra_filters.map(&:to_s)
 
-        expose on_http(*index_path) do
+        exposed = build_expose on_http(*index_path) do
           desc "Index data for #{record.name}"
           input do
             optional(:page).value(gt?: 0)
@@ -122,7 +122,8 @@ module Verse
             optional(:included).array(:string)
           end
         end
-        def index
+
+        define_method(:index) do
           included = (params[:included] || []) & authorized_included
 
           send(service).index(
@@ -133,6 +134,8 @@ module Verse
             sort: params[:sort]
           )
         end
+
+        self.attach_exposition(:index, exposed)
       end
 
     end

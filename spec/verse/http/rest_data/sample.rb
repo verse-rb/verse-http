@@ -13,6 +13,8 @@ module Spec
     end
 
     class FooExpo < Verse::Exposition::Base
+      http_path "/foo"
+
       use_service FooService
 
       inject Verse::Http::Rest,

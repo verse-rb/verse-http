@@ -11,11 +11,12 @@ SimpleCov.start do
 end
 
 require "pry"
-require "verse/http"
 require "bundler"
 
 Bundler.require
-require "webmock/rspec"
+
+require "verse/http"
+require "verse/http/spec"
 
 RSpec.configure do |config|
   # Generate Private/public key pair:
@@ -24,10 +25,14 @@ RSpec.configure do |config|
   # Use the key pair to sign and verify JWT tokens:
   Verse::Http::Auth::Token.sign_key = ecdsa_key
 
+  # Add user fixture
+  Verse::Http::Spec::HttpHelper.add_user("user", :user)
+
   # set a dummy role for testing
   Verse::Auth::Context[:user] = %w[
-    read.user.*
-    write.user.*
+    users.read.*
+    users.write.*
+    foos.*.*
   ]
 
   whitelist = ["localhost", "127.0.0.1"]
@@ -35,8 +40,6 @@ RSpec.configure do |config|
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
-
-  config.include Rack::Test::Methods
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
