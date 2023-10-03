@@ -15,7 +15,7 @@ module Verse
           def add_user(name, role, metadata = nil, scopes = {})
             metadata ||= { id: 1, name: name }
             @users ||= {}
-            @users[name.to_sym] = { role: role,  metadata: metadata, scopes: scopes }
+            @users[name.to_sym] = { role: role, metadata: metadata, scopes: scopes }
           end
 
           # Generate a new token for the given user.

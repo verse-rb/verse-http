@@ -86,7 +86,7 @@ module Verse
       )
         show && inject_expo_show(mod, record, show, service, authorized_included)
         index && inject_expo_index(mod, record, index, extra_filters,
-                          blacklist_filters, service, authorized_included)
+                                   blacklist_filters, service, authorized_included)
         update && inject_expo_update(mod, record, update, service)
         create && inject_expo_create(mod, record, create, service)
         destroy && inject_expo_destroy(mod, record, destroy, service)
@@ -232,6 +232,7 @@ module Verse
 
             record.fields.each do |k, _|
               next if k == record.primary_key
+
               optional(k)
             end
           end
@@ -258,7 +259,6 @@ module Verse
 
         mod.attach_exposition(:destroy, exposed)
       end
-
     end
   end
 end
