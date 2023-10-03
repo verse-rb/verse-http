@@ -37,9 +37,7 @@ module Verse
         end
 
         # Default output to application/json.
-        unless content_type
-          content_type "application/json"
-        end
+        content_type "application/json" unless content_type
       end
 
       use Verse::Http::Middleware::ErrorHandler
@@ -58,7 +56,7 @@ module Verse
       end
 
       # show some service information
-      get "/" do
+      get "/_service" do
         {
           service: Verse.service_name,
           id: Verse.service_id
