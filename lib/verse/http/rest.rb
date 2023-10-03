@@ -107,7 +107,7 @@ module Verse
       # :nodoc:
       def inject_service_show(mod, repository)
         mod.define_method(:show) do |id, included: []|
-          send(repository).find_by!({ id: }, included:)
+          send(repository).find_by!({ id: id }, included: included)
         end
       end
 
@@ -121,10 +121,10 @@ module Verse
         mod.define_method(:index) do |filter, included: [], page: 1, items_per_page: 100, sort: nil|
           send(repository).index(
             filter,
-            included:,
-            page:,
-            items_per_page:,
-            sort:
+            included: included,
+            page: page,
+            items_per_page: items_per_page,
+            sort: sort
           )
         end
       end
@@ -155,7 +155,7 @@ module Verse
           included = (params[:included] || []) & authorized_included
           send(service).show(
             params[:id],
-            included:
+            included: included
           )
         end
 
@@ -197,7 +197,7 @@ module Verse
 
           send(service).index(
             params.fetch(:filter, {}),
-            included:,
+            included: included,
             page: params.fetch(:page, 1),
             items_per_page: params.fetch(:per_page, 100),
             sort: params[:sort]

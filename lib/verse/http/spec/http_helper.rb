@@ -13,9 +13,9 @@ module Verse
           # @param metadata [Hash] The metadata of the user.
           # @param scopes [Hash] The scopes of the user.
           def add_user(name, role, metadata = nil, scopes = {})
-            metadata ||= { id: 1, name: }
+            metadata ||= { id: 1, name: name }
             @users ||= {}
-            @users[name.to_sym] = { role:, metadata:, scopes: }
+            @users[name.to_sym] = { role: role,  metadata: metadata, scopes: scopes }
           end
 
           # Generate a new token for the given user.

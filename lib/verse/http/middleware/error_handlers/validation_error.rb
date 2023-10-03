@@ -24,7 +24,7 @@ Verse::Http::Middleware::ErrorHandler.rescue_from Verse::Error::ValidationFailed
           model: error[:model],
           parameter: error[:parameter]
         },
-        meta:
+        meta: meta
       }.compact
     end
   ), status: e.class.http_code
