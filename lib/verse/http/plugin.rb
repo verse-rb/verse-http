@@ -16,7 +16,13 @@ module Verse
         "Serve HTTP endpoints using Sinatra as HTTP server."
       end
 
-      def validate_config; end
+      def validate_config
+        result = Config::Schema.new.call(config)
+
+        return if result.success?
+
+        raise "Invalid config for http plugin: #{result.errors}"
+      end
 
       def on_init
         validate_config

@@ -46,12 +46,14 @@ module Verse
 
         %i[get put patch post delete].each do |method|
           define_method(method) do |path, params = {}, headers = {}|
-            if Verse::Http::Spec::HttpHelper.current_user
-              headers["HTTP_AUTHORIZATION"] ||= "Bearer #{Verse::Http::Spec::HttpHelper.new_token(current_user)}"
-            end
+            Verse::Auth::CheckAuthenticationHandler.disabled do
+              if Verse::Http::Spec::HttpHelper.current_user
+                headers["HTTP_AUTHORIZATION"] ||= "Bearer #{Verse::Http::Spec::HttpHelper.new_token(current_user)}"
+              end
 
-            unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
-            unflavored_method.call(path, params, headers)
+              unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
+              unflavored_method.call(path, params, headers)
+            end
           end
         end
       end
