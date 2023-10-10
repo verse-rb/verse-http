@@ -46,7 +46,7 @@ module Verse
 
         %i[get put patch post delete].each do |method|
           define_method(method) do |path, params = {}, headers = {}|
-            Verse::Auth::CheckAuthenticationHandler.disabled do
+            Verse::Auth::CheckAuthenticationHandler.disable do
               if Verse::Http::Spec::HttpHelper.current_user
                 headers["HTTP_AUTHORIZATION"] ||= "Bearer #{Verse::Http::Spec::HttpHelper.new_token(current_user)}"
               end
