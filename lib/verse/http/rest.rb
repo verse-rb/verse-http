@@ -218,7 +218,10 @@ module Verse
         end
 
         mod.define_method(:create) do
-          send(service).create(params)
+          out = send(service).create(params)
+          server.response.status = 201
+
+          out
         end
 
         mod.attach_exposition(:create, exposed)
@@ -255,6 +258,7 @@ module Verse
 
         mod.define_method(:destroy) do
           send(service).destroy(params[:id])
+          server.response.status = 204
         end
 
         mod.attach_exposition(:destroy, exposed)
