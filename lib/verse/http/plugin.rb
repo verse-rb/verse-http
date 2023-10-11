@@ -35,7 +35,7 @@ module Verse
       end
 
       def on_start(mode)
-        return unless mode == :server
+        Verse::Http::RoutesCollection.register!
       end
     end
   end

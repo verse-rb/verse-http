@@ -242,7 +242,9 @@ module Verse
         end
 
         mod.define_method(:update) do
-          send(service).update(params[:id], params)
+          out = send(service).update(params[:id], params.except(:id))
+          server.response.status = 204 if out.nil?
+          out
         end
 
         mod.attach_exposition(:update, exposed)
@@ -257,8 +259,9 @@ module Verse
         end
 
         mod.define_method(:destroy) do
-          send(service).destroy(params[:id])
-          server.response.status = 204
+          out = send(service).destroy(params[:id])
+          server.response.status = 204 if out.nil?
+          out
         end
 
         mod.attach_exposition(:destroy, exposed)

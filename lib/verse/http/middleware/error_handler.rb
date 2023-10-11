@@ -46,7 +46,7 @@ module Verse
 
         def call_impl(env)
           @app.call(env)
-        rescue StandardError => e
+        rescue Exception => e # Rescue all exceptions
           handle_error(e)
         end
 

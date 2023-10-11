@@ -4,14 +4,15 @@ require "spec_helper"
 
 RSpec.describe Verse::Http::Rest, type: :exposition do
   before do
+    Verse.on_boot {
+      require_relative "./rest_data/sample"
+      Spec::Rest::FooExpo.register
+    }
+
     Verse.start(
       :test,
       config_path: "./spec/verse/spec_data/config.yml"
     )
-
-    require_relative "./rest_data/sample"
-
-    Spec::Rest::FooExpo.register
 
     # Register a few foo records:
     Spec::Rest::FooRepository.clear
@@ -172,7 +173,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
     context "#update" do
       it "basic call" do
         patch "/foo/1", { bar: "test" }
-        expect(last_response.status).to eq(200)
+        expect(last_response.status).to eq(204)
 
         get "/foo/1"
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
@@ -184,5 +185,13 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
         )
       end
     end
+
+    context "#route_sorting" do
+      it "basic call" do
+        get "/foo/route_sorting"
+        expect(last_response.status).to eq(200)
+      end
+    end
+
   end
 end

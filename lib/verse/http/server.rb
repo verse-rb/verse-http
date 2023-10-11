@@ -55,6 +55,11 @@ module Verse
         raise Verse::Error::NotFound
       end
 
+      def no_content
+        response.status = 204
+        nil
+      end
+
       # show some service information
       get "/_service" do
         {

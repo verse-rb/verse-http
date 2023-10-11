@@ -42,7 +42,9 @@ module Verse
         def register_impl
           hook = self
 
-          Verse::Http::Server.send(http_method, @path) do
+          Verse::Http::RoutesCollection.add_route(
+            http_method, @path
+          ) do
             hook.auth.call(env) do |auth_context|
               safe_params = hook.metablock.process_input(params)
 

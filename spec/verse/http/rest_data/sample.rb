@@ -32,13 +32,6 @@ module Spec
       use_repo FooRepository
 
       inject Verse::Http::Rest
-
-      def activate(id)
-        record = repo.find!(id)
-
-        # do something with record
-        repo.update!(record.id, bar: "active")
-      end
     end
 
     class FooExpo < Verse::Exposition::Base
@@ -55,13 +48,15 @@ module Spec
              blacklist_filters: ["data"],
              authorized_included: ["bars"]
 
-      expose on_http(:get, "activate/:id") do
-        input do
-          required(:id).filled(:integer)
-        end
+      # Without proper sorting, this
+      # would fail as we have already
+      # /foo/:id declared above with the
+      # inject method which precede
+      # this route.
+      expose on_http(:get, "route_sorting") do
       end
-      def activate
-        service.active(params[:id])
+      def route_sorting
+        nil
       end
     end
   end
