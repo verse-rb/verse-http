@@ -12,10 +12,10 @@ module Verse
           # @param role [String] The role of the user.
           # @param metadata [Hash] The metadata of the user.
           # @param scopes [Hash] The scopes of the user.
-          def add_user(name, role, metadata = nil, scopes = {})
+          def add_user(name, role, metadata = {}, scopes = {})
             metadata ||= { id: 1, name: name }
             @users ||= {}
-            @users[name.to_sym] = { role: role, metadata: metadata, scopes: scopes }
+            @users[name.to_sym] = { role: role.to_s, metadata: metadata, scopes: scopes }
           end
 
           # Generate a new token for the given user.
@@ -38,6 +38,10 @@ module Verse
 
         def current_user
           Verse::Http::Spec::HttpHelper.current_user
+        end
+
+        def current_user=(user)
+          Verse::Http::Spec::HttpHelper.current_user=(user)
         end
 
         def app
