@@ -41,7 +41,7 @@ module Verse
         end
 
         def current_user=(user)
-          Verse::Http::Spec::HttpHelper.current_user=(user)
+          Verse::Http::Spec::HttpHelper.current_user = (user)
         end
 
         def app

@@ -15,6 +15,5 @@ module Verse
 
       @default_renderer = Http::Renderer::Json
     end
-
   end
 end

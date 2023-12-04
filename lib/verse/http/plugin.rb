@@ -34,7 +34,7 @@ module Verse
         )
       end
 
-      def on_start(mode)
+      def on_start(_mode)
         Verse::Http::RoutesCollection.register!
       end
     end

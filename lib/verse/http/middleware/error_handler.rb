@@ -44,11 +44,13 @@ module Verse
           end.to_h
         end
 
+        # rubocop:disable Lint/RescueException
         def call_impl(env)
           @app.call(env)
         rescue Exception => e # Rescue all exceptions
           handle_error(e)
         end
+        # rubocop:enable Lint/RescueException
 
         def handle_error(error)
           ancestors = error.class.ancestors

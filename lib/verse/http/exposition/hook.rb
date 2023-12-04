@@ -50,13 +50,13 @@ module Verse
 
               renderer = hook.renderer
               renderer_instance = case renderer
-              when Proc
-                renderer.call(hook)
-              when Class
-                renderer.new
-              else
-                renderer
-              end
+                                  when Proc
+                                    renderer.call(hook)
+                                  when Class
+                                    renderer.new
+                                  else
+                                    renderer
+                                  end
 
               exposition = hook.create_exposition(
                 auth_context,
