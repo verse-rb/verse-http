@@ -3,7 +3,7 @@
 class TestExpo < Verse::Exposition::Base
   http_path "/test"
 
-  expose on_http(:get, "/identity", renderer: :identity)
+  expose on_http(:get, "/identity", renderer: Verse::Http::Renderer::Identity)
   def endpoint_identity
     auth_context.mark_as_checked!
     "hello world"

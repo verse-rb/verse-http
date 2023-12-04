@@ -31,7 +31,7 @@ module Verse
           if renderer
             @renderer = renderer
           else
-            @renderer
+            @renderer || Verse::Http::Renderer.default_renderer
           end
         end
 

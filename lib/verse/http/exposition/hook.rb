@@ -48,12 +48,15 @@ module Verse
             hook.auth.call(env) do |auth_context|
               safe_params = hook.metablock.process_input(params)
 
-              # fetch renderer
-              renderer_class = Verse::Http::Renderer[hook.renderer] do |value|
-                raise "Unknown renderer: `#{value}`"
+              renderer = hook.renderer
+              renderer_instance = case renderer
+              when Proc
+                renderer.call(hook)
+              when Class
+                renderer.new
+              else
+                renderer
               end
-
-              renderer_instance = renderer_class.new
 
               exposition = hook.create_exposition(
                 auth_context,

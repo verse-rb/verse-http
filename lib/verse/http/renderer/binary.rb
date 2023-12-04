@@ -50,8 +50,6 @@ module Verse
           result
         end
       end
-
-      self[:binary] = Binary
     end
   end
 end

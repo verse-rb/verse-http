@@ -50,6 +50,8 @@ module Verse
       end
 
       # Get a authentication strategy
+      # @param name [Symbol] the name of the strategy
+      # @return [Proc] the strategy
       def get(name)
         @strategies.fetch(name)
       end

@@ -28,8 +28,6 @@ module Verse
           end
         end
       end
-
-      self[:json] = Json
     end
   end
 end

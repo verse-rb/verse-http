@@ -8,8 +8,6 @@ module Verse
           result
         end
       end
-
-      self[:identity] = Identity
     end
   end
 end

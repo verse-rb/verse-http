@@ -37,8 +37,6 @@ module Verse
           end
         end
       end
-
-      self[:stream] = Stream
     end
   end
 end
