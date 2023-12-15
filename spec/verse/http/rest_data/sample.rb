@@ -3,16 +3,16 @@
 module Spec
   module Rest
     class FooRecord < Verse::Model::Record::Base
-      field :id, type: Integer, primary: true
+      field :id, primary: true
 
-      field :bar, type: String
-      field :data, type: Array
+      field :bar
+      field :data
 
       has_many :bars, repository: "Spec::Rest::BarRepository"
     end
 
     class FooRepository < Verse::Model::InMemory::Repository
-      resource "verse-http:foo"
+      self.resource = "verse-http:foo"
     end
 
     class BarRecord < Verse::Model::Record::Base
@@ -25,7 +25,7 @@ module Spec
     end
 
     class BarRepository < Verse::Model::InMemory::Repository
-      resource "verse-http:foo/bar"
+      self.resource = "verse-http:foo/bar"
     end
 
     class FooService < Verse::Service::Base
