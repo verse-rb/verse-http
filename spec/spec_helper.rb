@@ -19,12 +19,6 @@ require "verse/http"
 require "verse/http/spec"
 
 RSpec.configure do |config|
-  # Generate Private/public key pair:
-  ecdsa_key = OpenSSL::PKey::EC.generate("prime256v1")
-
-  # Use the key pair to sign and verify JWT tokens:
-  Verse::Http::Auth::Token.sign_key = ecdsa_key
-
   # Add user fixture
   Verse::Http::Spec::HttpHelper.add_user("user", :user)
 
