@@ -173,9 +173,8 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
     context "#update" do
       it "basic call" do
         patch "/foo/1", { bar: "test" }
-        expect(last_response.status).to eq(204)
+        expect(last_response.status).to eq(200)
 
-        get "/foo/1"
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
           {
             id: 1,

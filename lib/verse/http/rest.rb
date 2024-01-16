@@ -132,7 +132,9 @@ module Verse
 
       def inject_service_update(mod, repository)
         mod.define_method(:update) do |id, attributes|
-          send(repository).update!(id, attributes)
+          repo = send(repository)
+          repo.update!(id, attributes)
+          repo.find(id)
         end
       end
 
@@ -244,6 +246,7 @@ module Verse
 
         mod.define_method(:update) do
           out = send(service).update(params[:id], params.except(:id))
+
           server.response.status = 204 if out.nil?
           out
         end
