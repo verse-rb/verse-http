@@ -113,7 +113,8 @@ module Verse
 
       def inject_service_create(mod, repository)
         mod.define_method(:create) do |attributes|
-          send(repository).create(attributes)
+          id = send(repository).create(attributes)
+          send(repository).find(id)
         end
       end
 

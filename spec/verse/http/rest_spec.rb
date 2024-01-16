@@ -185,6 +185,28 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
       end
     end
 
+    context "#create" do
+      it "basic call" do
+        post "/foo", { bar: "test" }
+        expect(last_response.status).to eq(201)
+
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            id: 6,
+            bar: "test",
+            data: nil
+          }
+        )
+      end
+    end
+
+    context "#delete" do
+      it "basic call" do
+        delete "/foo/1"
+        expect(last_response.status).to eq(204)
+      end
+    end
+
     context "#route_sorting" do
       it "basic call" do
         get "/foo/route_sorting"
