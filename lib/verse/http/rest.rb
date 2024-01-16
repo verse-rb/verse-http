@@ -28,7 +28,7 @@ module Verse
       # @param update [Array]   path to the update action.  Format is [:(get|post|patch|put|delete), "path"]
       #                         Default is [:patch, "/:id"]
       #                         If falsey value, it won't generate the route
-      # @param destroy [Array]  path to the destroy action.  Format is [:(get|post|patch|put|delete), "path"].
+      # @param delete [Array]  path to the delete action.  Format is [:(get|post|patch|put|delete), "path"].
       #                         Default is [:delete, "/:id"]
       #                         If falsey value, it won't generate the route
       #
@@ -43,7 +43,7 @@ module Verse
         index: [:get, ""],
         create: [:post, ""],
         update: [:patch, ":id"],
-        destroy: [:delete, ":id"],
+        delete: [:delete, ":id"],
         extra_filters: [],
         blacklist_filters: [],
         authorized_included: [],
@@ -60,7 +60,7 @@ module Verse
                             index,
                             create,
                             update,
-                            destroy,
+                            delete,
                             extra_filters,
                             blacklist_filters,
                             authorized_included,
@@ -71,7 +71,7 @@ module Verse
                          index,
                          create,
                          update,
-                         destroy,
+                         delete,
                          repository)
         else
           raise "Can be used only on class inheriting from `Verse::Exposition::Base` or `Verse::Service::Base`"
@@ -81,7 +81,7 @@ module Verse
       def inject_exposition(
         mod, record, show,
         index, create, update,
-        destroy, extra_filters, blacklist_filters,
+        delete, extra_filters, blacklist_filters,
         authorized_included, service
       )
         show && inject_expo_show(mod, record, show, service, authorized_included)
@@ -89,19 +89,19 @@ module Verse
                                    blacklist_filters, service, authorized_included)
         update && inject_expo_update(mod, record, update, service)
         create && inject_expo_create(mod, record, create, service)
-        destroy && inject_expo_destroy(mod, record, destroy, service)
+        delete && inject_expo_delete(mod, record, delete, service)
       end
 
       def inject_service(
         mod, show, index,
-        create, update, destroy,
+        create, update, delete,
         repository
       )
         show && inject_service_show(mod, repository)
         index && inject_service_index(mod, repository)
         create && inject_service_create(mod, repository)
         update && inject_service_update(mod, repository)
-        destroy && inject_service_destroy(mod, repository)
+        delete && inject_service_delete(mod, repository)
       end
 
       # :nodoc:
@@ -139,8 +139,8 @@ module Verse
         end
       end
 
-      def inject_service_destroy(mod, repository)
-        mod.define_method(:destroy) do |id|
+      def inject_service_delete(mod, repository)
+        mod.define_method(:delete) do |id|
           send(repository).delete!(id)
         end
       end
@@ -255,21 +255,21 @@ module Verse
         mod.attach_exposition(:update, exposed)
       end
 
-      def inject_expo_destroy(mod, record, destroy_path, service)
-        exposed = mod.build_expose mod.on_http(*destroy_path) do
-          desc "Destroy a record `#{record.name}`"
+      def inject_expo_delete(mod, record, delete_path, service)
+        exposed = mod.build_expose mod.on_http(*delete_path) do
+          desc "delete a record `#{record.name}`"
           input do
             required(:id).value(:integer)
           end
         end
 
-        mod.define_method(:destroy) do
-          out = send(service).destroy(params[:id])
+        mod.define_method(:delete) do
+          out = send(service).delete(params[:id])
           server.response.status = 204 if out.nil?
           out
         end
 
-        mod.attach_exposition(:destroy, exposed)
+        mod.attach_exposition(:delete, exposed)
       end
     end
   end
