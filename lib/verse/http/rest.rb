@@ -118,13 +118,14 @@ module Verse
       end
 
       def inject_service_index(mod, repository)
-        mod.define_method(:index) do |filter, included: [], page: 1, items_per_page: 100, sort: nil|
+        mod.define_method(:index) do |filter, included: [], page: 1, items_per_page: 100, sort: nil, query_count: true|
           send(repository).index(
             filter,
             included: included,
             page: page,
             items_per_page: items_per_page,
-            sort: sort
+            sort: sort,
+            query_count: query_count
           )
         end
       end
