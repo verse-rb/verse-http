@@ -8,7 +8,7 @@ require_relative "middleware/logger_handler"
 module Verse
   module Http
     class Server < Sinatra::Base
-      CONTENT_TYPE_REGEXP = /^((\w|[\.-])+)\+((\w|[\.-])+)$/i
+      CONTENT_TYPE_REGEXP = /^((\w|[.-])+)\+((\w|[.-])+)$/i
 
       before do
         # Parse JSON Body and store in the params hash.
