@@ -28,7 +28,7 @@ module Verse
           case [first, second]
           when ["application", "json"]
             begin
-              JSON.parse(request.body.read)
+              JSON.parse(body_content)
             rescue JSON::ParserError => e
               raise Verse::Error::BadRequest, e.message
             end
