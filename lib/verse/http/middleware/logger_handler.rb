@@ -27,7 +27,7 @@ module Verse
           end
 
           output
-        rescue RuntimeError => e
+        rescue => e
           time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - time
           Verse.logger.warn(e)
 
