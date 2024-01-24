@@ -239,6 +239,7 @@ module Verse
 
             record.fields.each do |k, _|
               next if k == record.primary_key
+
               field?(k, Object)
             end
           end

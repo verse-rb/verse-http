@@ -18,7 +18,7 @@ Bundler.require
 require "verse/http"
 require "verse/http/spec"
 
-def silent(&block)
+def silent
   return unless (logger = Verse.logger)
 
   level = logger.level
