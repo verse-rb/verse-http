@@ -17,7 +17,7 @@ module Verse
       end
 
       def validate_config
-        result = Config::Schema.new.call(config)
+        result = Config::Schema.validate(config)
 
         return if result.success?
 

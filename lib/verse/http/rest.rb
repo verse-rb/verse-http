@@ -150,8 +150,8 @@ module Verse
         exposed = mod.build_expose mod.on_http(*show_path) do
           desc "Show a record `#{record.name}`"
           input do
-            required(:id).value(:integer)
-            optional(:included).array(:string)
+            field(:id, Integer)
+            field(:included, Array, of: String).optional
           end
         end
 
@@ -173,26 +173,26 @@ module Verse
         exposed = mod.build_expose mod.on_http(*index_path) do
           desc "Index data for #{record.name}"
           input do
-            optional(:page).value(:integer).value(gt?: 0)
-            optional(:per_page).value(:integer).value(gt?: 0, lt?: 1001)
-            optional(:sort).value(:string)
-            optional(:filter).hash do
+            field?(:page, Integer).rule("must be positive"){ |v| v > 0 }
+            field?(:per_page, Integer).rule("must be between 1 and 1000"){ |v| v > 0 && v < 1001 }
+            field?(:sort, String)
+            field?(:filter, Hash) do
               record.fields.each do |field|
                 next if blacklist_filters.include?(field[0])
 
-                optional(field[0])
+                field?(field[0], Object)
               end
 
-              extra_filters.each do |field|
-                case field
+              extra_filters.each do |f|
+                case f
                 when String, Symbol
-                  optional(field.to_sym).maybe(:string)
+                  field?(f.to_sym, String)
                 else
-                  field[1].call(optional(field[0].to_sym))
+                  f[1].call(field?(f[0].to_sym, Object))
                 end
               end
             end
-            optional(:included).array(:string)
+            field?(:included, Array, of: String)
           end
         end
 
@@ -215,8 +215,8 @@ module Verse
         exposed = mod.build_expose mod.on_http(*create_path) do
           desc "Create a new record `#{record.name}`"
           input do
-            record.fields.each do |field|
-              optional(field[0])
+            record.fields.each do |f|
+              field?(f[0])
             end
           end
         end
@@ -235,12 +235,11 @@ module Verse
         exposed = mod.build_expose mod.on_http(*update_path) do
           desc "Update a record `#{record.name}`"
           input do
-            required(record.primary_key).value(:integer)
+            field(record.primary_key, Integer)
 
             record.fields.each do |k, _|
               next if k == record.primary_key
-
-              optional(k)
+              field?(k, Object)
             end
           end
         end
@@ -259,7 +258,7 @@ module Verse
         exposed = mod.build_expose mod.on_http(*delete_path) do
           desc "delete a record `#{record.name}`"
           input do
-            required(:id).value(:integer)
+            field(:id, Integer)
           end
         end
 
