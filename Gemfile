@@ -13,13 +13,14 @@ gem "rubocop", "~> 1.21"
 gem "rack-test"
 gem "rspec", "~> 3.0"
 
-gem "bootsnap", "~> 1.16"
+gem "bootsnap", "~> 1.17"
+gem "racc", "~> 1.7"
 gem "pry"
 gem "simplecov"
 gem "webmock"
 
-gem "verse-core", github: "verse-rb/verse-core", branch: "feature/migrate-to-verse-schema"
-gem "verse-schema", github: "verse-rb/verse-core", branch: "master"
+gem "verse-core", github: "verse-rb/verse-core", branch: "master"
+gem "verse-schema", github: "verse-rb/verse-schema", branch: "master"
 
 gem "rake", "~> 13.0"
 

@@ -1,7 +1,7 @@
 GIT
   remote: git@github.com:verse-rb/verse-core.git
-  revision: d26c98d4a661d00005cdb343f273d059a5a1e84d
-  branch: feature/migrate-to-verse-schema
+  revision: 04b6631c5d5cd0f4634ebd3187307e1e103d2fb6
+  branch: master
   specs:
     verse-core (2.0.0)
       i18n (~> 1.10.0)
@@ -9,8 +9,8 @@ GIT
       verse-schema (~> 0.1.0)
 
 GIT
-  remote: git@github.com:verse-rb/verse-core.git
-  revision: aebfb17436448867a9c8e13225e092bb5dddb4b4
+  remote: git@github.com:verse-rb/verse-schema.git
+  revision: 7e33d12b821edd69630276b2ea9aeb0e8917ccb0
   branch: master
   specs:
     verse-schema (0.1.0)
@@ -28,7 +28,7 @@ GEM
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
-    bootsnap (1.16.0)
+    bootsnap (1.17.1)
       msgpack (~> 1.2)
     coderay (1.1.3)
     concurrent-ruby (1.2.3)
@@ -45,7 +45,7 @@ GEM
     mimemagic (0.4.3)
       nokogiri (~> 1)
       rake
-    msgpack (1.7.1)
+    msgpack (1.7.2)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     nokogiri (1.15.2-x86_64-linux)
@@ -119,9 +119,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  bootsnap (~> 1.16)
+  bootsnap (~> 1.17)
   mimemagic
   pry
+  racc (~> 1.7)
   rack-test
   rake (~> 13.0)
   relaxed-rubocop
