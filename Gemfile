@@ -18,7 +18,8 @@ gem "pry"
 gem "simplecov"
 gem "webmock"
 
-gem "verse-core", github: "verse-rb/verse-core", branch: "master"
+gem "verse-core", github: "verse-rb/verse-core", branch: "feature/migrate-to-verse-schema"
+gem "verse-schema", github: "verse-rb/verse-core", branch: "master"
 
 gem "rake", "~> 13.0"
 

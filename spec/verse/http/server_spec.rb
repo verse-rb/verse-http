@@ -27,9 +27,11 @@ RSpec.describe Verse::Http::Server, type: :exposition do
 
   describe "404 check" do
     it "returns 404 NOT FOUND" do
-      get "/hello"
+      silent do
+        get "/hello"
 
-      expect(last_response.status).to eq 404
+        expect(last_response.status).to eq 404
+      end
     end
   end
 
@@ -48,17 +50,21 @@ RSpec.describe Verse::Http::Server, type: :exposition do
 
     context "authorization check (identity renderer)" do
       it "returns 401 UNAUTHORIZED" do
-        get "/test/identity"
+        silent do
+          get "/test/identity"
 
-        expect(last_response.status).to eq 401
+          expect(last_response.status).to eq 401
+        end
       end
 
       it "returns 401 if token is expired" do
-        get "/test/identity", {}, {
-          "HTTP_AUTHORIZATION" => "Bearer #{expired_authorization_token}"
-        }
+        silent do
+          get "/test/identity", {}, {
+            "HTTP_AUTHORIZATION" => "Bearer #{expired_authorization_token}"
+          }
 
-        expect(last_response.status).to eq 401
+          expect(last_response.status).to eq 401
+        end
       end
 
       it "returns 200 OK" do

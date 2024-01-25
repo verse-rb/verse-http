@@ -5,10 +5,8 @@ module Verse
     module Config
       # The configuration schema for the Verse::Http::Server
       # plugin configuration
-      class Schema < Verse::Validation::Contract
-        params do
-          optional(:show_error_details).filled(:bool)
-        end
+      Schema = Verse::Schema.define do
+        field(:show_error_details, TrueClass).optional
       end
     end
   end

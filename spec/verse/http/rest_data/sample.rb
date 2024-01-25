@@ -43,7 +43,7 @@ module Spec
              record: FooRecord,
              extra_filters: [
                "test",
-               ["data__contains", ->(x) { x.value(:integer) }]
+               ["data__contains", ->(x) { x.type(Integer) }]
              ],
              blacklist_filters: ["data"],
              authorized_included: ["bars"]

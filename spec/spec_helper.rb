@@ -18,6 +18,17 @@ Bundler.require
 require "verse/http"
 require "verse/http/spec"
 
+def silent
+  return unless (logger = Verse.logger)
+
+  level = logger.level
+  logger.fatal!
+
+  yield
+ensure
+  logger.level = level
+end
+
 RSpec.configure do |config|
   # Add user fixture
   Verse::Http::Spec::HttpHelper.add_user("user", :user)
