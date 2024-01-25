@@ -14,8 +14,8 @@ gem "rack-test"
 gem "rspec", "~> 3.0"
 
 gem "bootsnap", "~> 1.17"
-gem "racc", "~> 1.7"
 gem "pry"
+gem "racc", "~> 1.7"
 gem "simplecov"
 gem "webmock"
 
