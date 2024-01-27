@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative "./with_renderer"
+require_relative "../with_renderer"
 
 module Verse
   module Http
     module Middleware
       class ErrorHandler
-        include WithRenderer
+        include Verse::Http::WithRenderer
 
         @handlers = {}
 
@@ -45,21 +45,22 @@ module Verse
         end
 
         # rubocop:disable Lint/RescueException
-        def call_impl(env)
+        def call(env)
+          @output = nil
           @app.call(env)
         rescue Exception => e # Rescue all exceptions
-          handle_error(e)
+          handle_error(e, env)
         end
         # rubocop:enable Lint/RescueException
 
-        def handle_error(error)
+        def handle_error(error, env)
           ancestors = error.class.ancestors
 
           handler = nil
 
           false until handler = self.class.handlers[ancestors.shift]
 
-          instance_exec(error, &handler)
+          instance_exec(error, env, &handler)
 
           output
         end
@@ -69,5 +70,3 @@ module Verse
 end
 
 require_relative "error_handlers/default"
-require_relative "error_handlers/verse_error"
-require_relative "error_handlers/validation_error"

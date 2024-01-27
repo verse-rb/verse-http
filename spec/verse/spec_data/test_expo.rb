@@ -13,4 +13,9 @@ class TestExpo < Verse::Exposition::Base
   def endpoint_no_auth
     "hello world"
   end
+
+  expose on_http(:get, "/error", auth: nil)
+  def error
+    raise "error !"
+  end
 end

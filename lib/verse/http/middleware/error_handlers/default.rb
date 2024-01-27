@@ -3,22 +3,26 @@
 require_relative "../error_handler"
 
 # Default handler, used when no handler is available
-Verse::Http::Middleware::ErrorHandler.rescue_from do |e|
-  error_code = Digest::SHA2.hexdigest([e.message, e.backtrace.join("\n")].join("\n"))[0..7]
+Verse::Http::Middleware::ErrorHandler.rescue_from nil do |e, env|
+  renderer = env["verse.http.renderer"]
 
-  struct = {
-    type: "error",
-    status: "500",
-    title: "verse.errors.server_error",
-    code: error_code,
-    details: (if Verse::Http::Plugin.show_error_details?
-                {
-                  class: e.class.to_s,
-                  message: e.message,
-                  backtrace: e.backtrace
-                }
-              end)
-  }.compact
+  if e.class.respond_to?(:http_code)
+    code = e.class.http_code
+  else
+    code = 500
+  end
 
-  render JSON.pretty_generate(struct), status: 500
+  if renderer && renderer.respond_to?(:render_error)
+    render renderer.render_error(e, env), status: code
+  else
+    # Standard json error format
+    error = {
+      status: code.to_s,
+      type: e.class.name,
+      detail: e.message,
+      backtrace: ( e.backtrace if Verse::Http::Plugin.show_error_details? )
+    }.compact
+
+    render JSON.pretty_generate(error), status: code
+  end
 end

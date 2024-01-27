@@ -27,7 +27,6 @@ module Verse
           token = Verse::Http::Auth::Token.decode(credentials)
           auth_context = token.context
 
-          env["auth_context"] = auth_context
           block.call(auth_context)
         end,
 
@@ -37,7 +36,6 @@ module Verse
           # Ignore check on nil authorization
           auth_context.mark_as_checked!
 
-          env["auth_context"] = auth_context
           block.call(auth_context)
         end
       }
@@ -53,7 +51,9 @@ module Verse
       # @param name [Symbol] the name of the strategy
       # @return [Proc] the strategy
       def get(name)
-        @strategies.fetch(name)
+        @strategies.fetch(name) {
+          raise "unable to find auth strategy `#{name.inspect}`"
+        }
       end
     end
   end

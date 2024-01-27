@@ -45,6 +45,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
     context "#index" do
       it "basic call" do
         get "/foo"
+
         expect(last_response.status).to eq(200)
       end
 
@@ -90,6 +91,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
 
       it "with included" do
         get "/foo?included[]=bars"
+
         expect(last_response.status).to eq(200)
         expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
           {

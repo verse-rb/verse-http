@@ -45,18 +45,24 @@ module Verse
           Verse::Http::RoutesCollection.add_route(
             http_method, @path
           ) do
-            hook.auth.call(env) do |auth_context|
-              safe_params = hook.metablock.process_input(params)
+            renderer = hook.renderer
+            renderer_instance = \
+              case renderer
+              when Proc
+                renderer.call(hook)
+              when Class
+                renderer.new
+              else
+                renderer
+              end
 
-              renderer = hook.renderer
-              renderer_instance = case renderer
-                                  when Proc
-                                    renderer.call(hook)
-                                  when Class
-                                    renderer.new
-                                  else
-                                    renderer
-                                  end
+            env["verse.http.server"] = self
+            env["verse.http.renderer"] = renderer_instance
+
+            hook.auth.call(env) do |auth_context|
+              env["verse.http.auth_context"] = auth_context
+
+              safe_params = hook.metablock.process_input(params)
 
               exposition = hook.create_exposition(
                 auth_context,

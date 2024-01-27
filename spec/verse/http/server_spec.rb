@@ -11,6 +11,7 @@ RSpec.describe Verse::Http::Server, type: :exposition do
 
     load File.expand_path("../spec_data/test_expo.rb", __dir__)
     TestExpo.register
+    Verse::Http::RoutesCollection.register!
   end
 
   after do
@@ -35,6 +36,16 @@ RSpec.describe Verse::Http::Server, type: :exposition do
     end
   end
 
+  describe "custom error check" do
+    it "returns 500 INTERNAL SERVER ERROR" do
+      silent do
+        get "/test/error"
+
+        expect(last_response.status).to eq 500
+      end
+    end
+  end
+
   describe "exposed endpoints" do
     let(:authorization_token) {
       Verse::Http::Auth::Token.encode(
@@ -47,6 +58,43 @@ RSpec.describe Verse::Http::Server, type: :exposition do
         { id: 1, name: "toto" }, "user", { users: 1 }, exp: Time.now.to_i - 1000
       )
     }
+
+    context "check LoggerHandler" do
+      before do
+        @old_logger = Verse.logger
+        @io = StringIO.new
+        Verse.logger = ::Logger.new(@io)
+        Verse.logger.level = Logger::DEBUG
+      end
+
+      after do
+        Verse.logger = @old_logger
+      end
+
+      it "output 401 Unauthorized" do
+        get "/test/identity"
+
+        expect(last_response.status).to eq 401
+
+        log_output = @io.string
+        first, second = log_output.split("\n")
+
+        expect(first).to match(/\[([0-9a-f]{12})\] \[401\] GET/)
+        expect(second).to match(/\[([0-9a-f]{12})\] Verse::Error::Authorization/)
+      end
+
+      it "output when 200 OK" do
+        get "/test/identity", {}, {
+          "HTTP_AUTHORIZATION" => "Bearer #{authorization_token}"
+        }
+
+        expect(last_response.status).to eq 200
+
+        log_output = @io.string
+
+        expect(log_output).to match(/\[([0-9a-f]{12})\] \[200\] GET/)
+      end
+    end
 
     context "authorization check (identity renderer)" do
       it "returns 401 UNAUTHORIZED" do
