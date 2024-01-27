@@ -4,7 +4,6 @@ module Verse
   module Http
     module Middleware
       class LoggerHandler
-
         def initialize(app)
           @app = app
         end
@@ -13,21 +12,19 @@ module Verse
           @rid = rand(0..0xFFFFFFFFFFFF).to_s(16).rjust(12, "0")
           @env = env
           time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-
-          error = nil
           begin
             output = @app.call(env)
-          rescue StandardError => error
-            if error.class.respond_to?(:http_code)
-              code = error.class.http_code
-            else
-              code = 500
-            end
+          rescue StandardError => e
+            code = if e.class.respond_to?(:http_code)
+                     e.class.http_code
+                   else
+                     500
+                   end
 
             time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - time
             Verse.logger.warn{ log_status(time, [code]) }
-            Verse.logger.warn{ log_error(error) }
-            raise error
+            Verse.logger.warn{ log_error(e) }
+            raise e
           end
 
           time = Process.clock_gettime(Process::CLOCK_MONOTONIC) - time
@@ -47,8 +44,8 @@ module Verse
           "[#{@rid}] [#{output[0]}] #{@env["REQUEST_METHOD"]} #{@env["REQUEST_PATH"]} [#{human_readable_time(time)}]"
         end
 
-        def log_error(e)
-          "[#{@rid}] #{e.class.name} (#{e.message})"
+        def log_error(error)
+          "[#{@rid}] #{error.class.name} (#{error.message})"
         end
 
         def error_code?(status)
@@ -62,7 +59,6 @@ module Verse
             "#{time.round(2)}s"
           end
         end
-
       end
     end
   end

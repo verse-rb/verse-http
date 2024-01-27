@@ -6,13 +6,13 @@ require_relative "../error_handler"
 Verse::Http::Middleware::ErrorHandler.rescue_from nil do |e, env|
   renderer = env["verse.http.renderer"]
 
-  if e.class.respond_to?(:http_code)
-    code = e.class.http_code
-  else
-    code = 500
-  end
+  code = if e.class.respond_to?(:http_code)
+           e.class.http_code
+         else
+           500
+         end
 
-  if renderer && renderer.respond_to?(:render_error)
+  if renderer.respond_to?(:render_error)
     render renderer.render_error(e, env), status: code
   else
     # Standard json error format

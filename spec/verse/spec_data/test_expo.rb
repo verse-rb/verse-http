@@ -18,4 +18,15 @@ class TestExpo < Verse::Exposition::Base
   def error
     raise "error !"
   end
+
+  expose on_http(:post, "/no_content", auth: nil)
+  def no_content
+    server.no_content
+  end
+
+  expose on_http(:post, "/custom_type", auth: nil)
+  def custom_type
+    unsafe_params
+  end
+
 end

@@ -9,6 +9,7 @@ git_source(:github) { |repo| "git@github.com:#{repo}.git" }
 gem "dotenv"
 gem "verse-core", github: "verse-rb/verse-core", branch: "master"
 gem "verse-http", path: "../.."
+gem "verse-schema", github: "verse-rb/verse-schema", branch: "master"
 gem "zeitwerk", require: false
 
 gem "puma", ">= 6.3.1"

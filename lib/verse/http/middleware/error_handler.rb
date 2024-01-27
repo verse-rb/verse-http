@@ -20,28 +20,10 @@ module Verse
           def clear_handler(class_name)
             @handlers.delete(class_name)
           end
-
-          def flavor_rescue_from(class_name, &block)
-            handler = @handlers[class_name]
-
-            flavored_handler = ->(err) do
-              instance_exec(err){ block.call(&handler) }
-            end
-
-            @handlers[class_name] = flavored_handler
-          end
         end
 
         def initialize(app)
           @app = app
-        end
-
-        def local_message_list(error_key, details = {})
-          details ||= {}
-
-          ::I18n.available_locales.map do |loc|
-            [loc, ::I18n.with_locale(loc){ ::I18n.t(error_key, **details) }]
-          end.to_h
         end
 
         # rubocop:disable Lint/RescueException

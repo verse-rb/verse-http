@@ -71,10 +71,10 @@ module Verse
 
       # show some service information
       get "/_service" do
-        {
+        JSON.generate({
           service: Verse.service_name,
           id: Verse.service_id
-        }.to_json
+        })
       end
     end
   end

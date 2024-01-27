@@ -6,7 +6,7 @@ module Verse
   module Http
     module Renderer
       class Json
-        include  Verse::Http::WithRenderer
+        include Verse::Http::WithRenderer
 
         @pretty = true
 
@@ -25,11 +25,11 @@ module Verse
           server = ctx["verse.http.server"]
           server.content_type(server.content_type || "application/json")
 
-          if error.class.respond_to?(:http_code)
-            code = error.class.http_code
-          else
-            code = 500
-          end
+          code = if error.class.respond_to?(:http_code)
+                   error.class.http_code
+                 else
+                   500
+                 end
 
           result = {
             status: code.to_s,
@@ -42,7 +42,7 @@ module Verse
           if pretty
             JSON.pretty_generate(result)
           else
-            result.to_json
+            JSON.generate(result)
           end
         end
 
@@ -52,7 +52,7 @@ module Verse
           if pretty
             JSON.pretty_generate(result)
           else
-            result.to_json
+            JSON.generate(result)
           end
         end
       end

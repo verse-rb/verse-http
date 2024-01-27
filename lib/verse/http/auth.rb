@@ -30,12 +30,12 @@ module Verse
           block.call(auth_context)
         end,
 
-        nil => proc do |env, &block|
+        nil => proc do |_env, &block|
           rights = Verse::Http::Auth::Token.role_backend.fetch("anonymous")
 
           auth_context = Verse::Auth::Context.new(
             rights,
-            metadata: { role: "anonymous"}
+            metadata: { role: "anonymous" }
           )
 
           # Ignore check on nil authorization
