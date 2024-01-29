@@ -17,8 +17,7 @@ module Verse
 
       def validate_config
         result = Config::Schema.validate(config)
-
-        @show_error_details = result.value[:show_error_details]
+        self.class.show_error_details = result.value.fetch(:show_error_details)
 
         return if result.success?
 
