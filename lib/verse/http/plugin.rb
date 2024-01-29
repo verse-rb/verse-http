@@ -7,8 +7,7 @@ module Verse
         attr_accessor :show_error_details
 
         def show_error_details?
-          true
-          # !!@show_error_details
+          @show_error_details
         end
       end
 
@@ -18,6 +17,8 @@ module Verse
 
       def validate_config
         result = Config::Schema.validate(config)
+
+        @show_error_details = result.value[:show_error_details]
 
         return if result.success?
 
