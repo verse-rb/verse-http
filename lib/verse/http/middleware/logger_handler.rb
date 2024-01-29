@@ -45,7 +45,14 @@ module Verse
         end
 
         def log_error(error)
-          "[#{@rid}] #{error.class.name} (#{error.message})"
+          out = "[#{@rid}] #{error.class.name} (#{error.message})"
+
+          if Verse::Http::Plugin.show_error_details? && error.backtrace
+            out << "\n"
+            out << error.backtrace.map{ |x| "[#{@rid}] #{x}"}.join("\n")
+          end
+
+          out
         end
 
         def error_code?(status)
