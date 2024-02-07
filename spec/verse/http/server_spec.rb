@@ -126,7 +126,7 @@ RSpec.describe Verse::Http::Server, type: :exposition do
 
       it "returns 200 OK with cookie" do
         clear_cookies
-        set_cookie "authorization=#{authorization_token}"
+        set_cookie "auth-token=#{authorization_token}"
 
         get "/test/identity", {}
 

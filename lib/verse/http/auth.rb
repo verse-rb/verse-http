@@ -5,7 +5,7 @@ module Verse
     module Auth
       extend self
 
-      @auth_cookie = "authorization"
+      @auth_cookie = "auth-token"
       @auth_header = "HTTP_AUTHORIZATION"
 
       attr_accessor :auth_cookie, :auth_header
