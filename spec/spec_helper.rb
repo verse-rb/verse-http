@@ -34,7 +34,7 @@ RSpec.configure do |config|
   Verse::Http::Spec::HttpHelper.add_user("user", :user)
 
   # set a dummy role for testing
-  Verse::Auth::Context[:user] = %w[
+  Verse::Auth::SimpleRoleBackend[:user] = %w[
     users.read.*
     users.write.*
     verse-http:foo.*.*

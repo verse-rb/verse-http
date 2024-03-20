@@ -11,7 +11,6 @@ module Verse
         # to be used with microservices, and we want only the authentication
         # service to be able to forge a new token.
         @sign_algorithm = "ES256"
-        @role_backend = Verse::Http::Auth::SimpleRoleBackend
 
         class << self
           # The algorithm used to sign the token.
@@ -68,10 +67,8 @@ module Verse
         # Initialize the token and build the authentication context from it.
         def initialize(payload)
           payload.values_at("u", "r", "s").tap do |user, role, scopes|
-            rights = self.class.role_backend.fetch(role)
-
-            @context = Verse::Auth::Context.new(
-              rights,
+            @context = Verse::Auth::Context.from_role(
+              role,
               custom_scopes: deep_symbolize_keys(scopes),
               metadata: { **deep_symbolize_keys(user), role: role.to_sym }
             )

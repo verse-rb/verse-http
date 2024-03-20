@@ -31,10 +31,8 @@ module Verse
         end,
 
         nil => proc do |_env, &block|
-          rights = Verse::Http::Auth::Token.role_backend.fetch("anonymous")
-
-          auth_context = Verse::Auth::Context.new(
-            rights,
+          auth_context = Verse::Auth::Context.from_role(
+            "anonymous",
             metadata: { role: "anonymous" }
           )
 
