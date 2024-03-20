@@ -28,5 +28,4 @@ class TestExpo < Verse::Exposition::Base
   def custom_type
     unsafe_params
   end
-
 end

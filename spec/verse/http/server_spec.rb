@@ -141,7 +141,6 @@ RSpec.describe Verse::Http::Server, type: :exposition do
       expect(last_response.body).to eq "\"hello world\""
     end
 
-
     it "has no content feature" do
       post "/test/no_content"
 
@@ -150,7 +149,7 @@ RSpec.describe Verse::Http::Server, type: :exposition do
     end
 
     it "decodes custom content type" do
-      post "/test/custom_type", JSON.generate({data: 1}), "CONTENT_TYPE" => "application/vnd.api+json"
+      post "/test/custom_type", JSON.generate({ data: 1 }), "CONTENT_TYPE" => "application/vnd.api+json"
 
       expect(last_response.status).to eq 200
       expect(JSON.parse(last_response.body, symbolize_names: true)).to eq({ data: 1 })

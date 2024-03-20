@@ -237,7 +237,7 @@ module Verse
           input do
             field(record.primary_key, Integer)
 
-            record.fields.each do |k, _|
+            record.fields.each_key do |k|
               next if k == record.primary_key
 
               field?(k, Object)

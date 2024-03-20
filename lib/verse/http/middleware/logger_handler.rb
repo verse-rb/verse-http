@@ -49,7 +49,7 @@ module Verse
 
           if Verse::Http::Plugin.show_error_details? && error.backtrace
             out << "\n"
-            out << error.backtrace.map{ |x| "[#{@rid}] #{x}"}.join("\n")
+            out << error.backtrace.map{ |x| "[#{@rid}] #{x}" }.join("\n")
           end
 
           out
