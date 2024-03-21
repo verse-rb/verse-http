@@ -16,6 +16,8 @@ require "bundler"
 Bundler.require
 
 require "verse/http"
+
+require "verse/spec"
 require "verse/http/spec"
 
 def silent
@@ -31,7 +33,7 @@ end
 
 RSpec.configure do |config|
   # Add user fixture
-  Verse::Http::Spec::HttpHelper.add_user("user", :user)
+  Verse::Spec.add_user("user", :user)
 
   # set a dummy role for testing
   Verse::Auth::SimpleRoleBackend[:user] = %w[

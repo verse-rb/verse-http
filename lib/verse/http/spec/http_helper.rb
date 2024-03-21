@@ -7,30 +7,18 @@ module Verse
         class << self
           attr_accessor :current_user
 
-          # Add a user to the helper.
-          # @param name [String] The name of the user.
-          # @param role [String] The role of the user.
-          # @param metadata [Hash] The metadata of the user.
-          # @param scopes [Hash] The scopes of the user.
-          def add_user(name, role, metadata = {}, scopes = {})
-            metadata ||= { id: 1, name: name }
-            @users ||= {}
-            @users[name.to_sym] = { role: role.to_s, metadata: metadata, scopes: scopes }
-          end
-
           # Generate a new token for the given user.
           # @param username [String] The name of the user. Must be registered via `add_user` method
           # @return [String] The JWT token.
           def new_token(username)
-            @users ||= {}
-            user = @users.fetch(username.to_sym) {
+            user = Verse::Spec.users.fetch(username.to_sym) {
               raise "User `#{username}` not found. " \
                     "Add it with `Verse::Http::Spec::HttpHelper.add_user(\"#{username}\", role, metadata, scopes)`" \
                     "in your spec_helper.rb"
             }
 
             Verse::Http::Auth::Token.encode(
-              *user.values_at(:metadata, :role, :scopes),
+              *user.values_at(:user_data, :role, :scopes),
               exp: Time.now.to_i + 1_000_000
             )
           end
@@ -40,19 +28,27 @@ module Verse
           Verse::Http::Spec::HttpHelper.current_user
         end
 
-        def current_user=(user)
-          Verse::Http::Spec::HttpHelper.current_user = (user)
+        def current_user=(username)
+          Verse::Http::Spec::HttpHelper.current_user = username
         end
 
         def app
           Verse::Http::Server
         end
 
+        def with_user(username)
+          old_user = Verse::Http::Spec::HttpHelper.current_user
+          Verse::Http::Spec::HttpHelper.current_user = username
+          yield
+        ensure
+          Verse::Http::Spec::HttpHelper.current_user = old_user
+        end
+
         %i[get put patch post delete].each do |method|
           define_method(method) do |path, params = {}, headers = {}|
             Verse::Auth::CheckAuthenticationHandler.disable do
               if Verse::Http::Spec::HttpHelper.current_user
-                headers["HTTP_AUTHORIZATION"] ||= "Bearer #{Verse::Http::Spec::HttpHelper.new_token(current_user)}"
+                headers[Verse::Http::Auth.auth_header] ||= "Bearer #{Verse::Http::Spec::HttpHelper.new_token(current_user)}"
               end
 
               unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
