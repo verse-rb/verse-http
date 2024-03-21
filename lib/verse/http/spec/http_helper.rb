@@ -36,7 +36,7 @@ module Verse
           Verse::Http::Server
         end
 
-        def with_user(username)
+        def as_user(username)
           old_user = Verse::Http::Spec::HttpHelper.current_user
           Verse::Http::Spec::HttpHelper.current_user = username
           yield
