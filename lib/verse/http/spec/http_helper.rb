@@ -44,6 +44,21 @@ module Verse
           Verse::Http::Spec::HttpHelper.current_user = old_user
         end
 
+        def current_user_context
+          current_user = Verse::Http::Spec::HttpHelper.current_user
+          return nil if current_user.nil?
+
+          params = Verse::Spec.users.fetch(current_user) {
+            raise "user `#{current_user}` not found. Please add it with Verse::Spec.add_user"
+          }
+
+          Verse::Auth::Context.from_role(
+            params[:role],
+            custom_scopes: params[:scopes],
+            metadata: params[:user_data]
+          )
+        end
+
         %i[get put patch post delete].each do |method|
           define_method(method) do |path, params = {}, headers = {}|
             Verse::Auth::CheckAuthenticationHandler.disable do
