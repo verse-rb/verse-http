@@ -67,6 +67,15 @@ module Verse
               end
 
               unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
+
+              if params.is_a?(Hash) && params.any?
+                headers["CONTENT_TYPE"] ||= "application/json"
+
+                if headers["CONTENT_TYPE"] == "application/json"
+                  params = params.to_json
+                end
+              end
+
               unflavored_method.call(path, params, headers)
             end
           end
