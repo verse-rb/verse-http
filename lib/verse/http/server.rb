@@ -11,39 +11,43 @@ module Verse
       CONTENT_TYPE_REGEXP = /^((\w|[.-])+)\+((\w|[.-])+)$/i
 
       before do
-        # Parse JSON Body and store in the params hash.
-        request.body.rewind
-
-        body_content = request.body.read
-
         content_type = request.env["CONTENT_TYPE"]
 
-        first, second = content_type&.split("/")
+        if content_type =~ /\Amultipart\/form-data/
+          self.params = request.env["rack.request.form_hash"]
+        else
+          # Parse JSON Body and store in the params hash.
+          request.body.rewind
 
-        if second&.=~(CONTENT_TYPE_REGEXP)
-          second = second[CONTENT_TYPE_REGEXP, 3]
-        end
+          body_content = request.body.read
 
-        body_params = \
-          case [first, second]
-          when ["application", "json"]
-            begin
-              JSON.parse(body_content)
-            rescue JSON::ParserError => e
-              raise Verse::Error::BadRequest, e.message
+          first, second = content_type&.split("/")
+
+          if second&.=~(CONTENT_TYPE_REGEXP)
+            second = second[CONTENT_TYPE_REGEXP, 3]
+          end
+
+          body_params = \
+            case [first, second]
+            when ["application", "json"]
+              begin
+                JSON.parse(body_content)
+              rescue JSON::ParserError => e
+                raise Verse::Error::BadRequest, e.message
+              end
+            else
+              body_content
             end
-          else
-            body_content
-          end
 
-        # If the body is not a hash, we merge it into the params hash
-        # under the special key _body
-        self.params = \
-          if body_params.is_a?(Hash)
-            body_params.merge(params)
-          else
-            params.merge({ _body: body_params })
-          end
+          # If the body is not a hash, we merge it into the params hash
+          # under the special key _body
+          self.params = \
+            if body_params.is_a?(Hash)
+              body_params.merge(params)
+            else
+              params.merge({ _body: body_params })
+            end
+        end
 
         # Default output to application/json.
         content_type "application/json" unless content_type
@@ -71,7 +75,8 @@ module Verse
 
       # show some service information
       get "/_service" do
-        JSON.generate({
+        JSON.generate(
+          {
                         service: Verse.service_name,
                         id: Verse.service_id
                       })

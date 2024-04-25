@@ -134,6 +134,18 @@ RSpec.describe Verse::Http::Server, type: :exposition do
       end
     end
 
+    it "can upload a file" do
+      clear_cookies
+      set_cookie "auth-token=#{authorization_token}"
+
+      post "/test/upload", {
+        file: Rack::Test::UploadedFile.new(File.expand_path("../spec_data/file.txt", __dir__))
+      }
+      puts last_response.body
+
+      expect(last_response.status).to eq 200
+    end
+
     it "test the no auth renderer" do
       get "/test/no_auth"
 

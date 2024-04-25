@@ -24,6 +24,15 @@ class TestExpo < Verse::Exposition::Base
     server.no_content
   end
 
+  expose on_http(:post, "/upload", auth: nil) do
+    input do
+      field(:file, Verse::Http::UploadedFile)
+    end
+  end
+  def upload
+    raise "error" unless params[:file].tempfile.read == File.read(File.join(__dir__, "file.txt"))
+  end
+
   expose on_http(:post, "/custom_type", auth: nil)
   def custom_type
     unsafe_params

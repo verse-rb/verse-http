@@ -68,11 +68,31 @@ module Verse
 
               unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
 
-              if params.is_a?(Hash) && params.any?
-                headers["CONTENT_TYPE"] ||= "application/json"
+              deep_check_multipart = ->(hash) {
+                hash.any? do |k, v|
+                  if v.is_a?(Hash)
+                    return true if deep_check_multipart.call(v)
+                  elsif v.is_a?(Array)
+                    return true if v.any? { |e| e.is_a?(Hash) && deep_check_multipart.call(e) }
+                  elsif v.is_a?(Rack::Test::UploadedFile)
+                    return true
+                  end
+                end
 
-                if headers["CONTENT_TYPE"] == "application/json"
-                  params = params.to_json
+                return false
+              }
+
+              if params.is_a?(Hash) && params.any?
+                is_multipart = deep_check_multipart.call(params)
+
+                if is_multipart
+                  headers["CONTENT_TYPE"] ||= "multipart/form-data"
+                else
+                  headers["CONTENT_TYPE"] ||= "application/json"
+
+                  if headers["CONTENT_TYPE"] == "application/json"
+                    params = params.to_json
+                  end
                 end
               end
 
