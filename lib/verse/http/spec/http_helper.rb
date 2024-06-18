@@ -10,8 +10,8 @@ module Verse
           Verse::Http::Server
         end
 
-        def auth_token
-          raise "Missing current_auth_context" unless current_auth_context
+        def current_auth_token
+          return nil unless current_auth_context
 
           user = {
             user_data: current_auth_context.metadata,
@@ -29,7 +29,7 @@ module Verse
           define_method(method) do |path, params = {}, headers = {}|
             Verse::Auth::CheckAuthenticationHandler.disable do
               if current_auth_context
-                headers[Verse::Http::Auth.auth_header] ||= "Bearer #{auth_token}"
+                headers[Verse::Http::Auth.auth_header] ||= "Bearer #{current_auth_token}"
               end
 
               unflavored_method = Rack::Test::Methods.instance_method(method).bind(self)
