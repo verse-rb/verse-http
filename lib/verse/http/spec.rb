@@ -14,11 +14,4 @@ RSpec.configure do |c|
     # Use the key pair to sign and verify JWT tokens:
     Verse::Http::Auth::Token.sign_key = ecdsa_key
   end
-
-  c.around(:each, type: :exposition) do |example|
-    Verse::Http::Spec::HttpHelper.current_user = example.metadata[:as]
-    example.run
-  ensure
-    Verse::Http::Spec::HttpHelper.current_user = nil
-  end
 end
