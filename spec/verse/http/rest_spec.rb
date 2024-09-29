@@ -58,7 +58,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
               { id: 1, bar: "1", data: [1, 2, 3, 4] },
               { id: 2, bar: "2", data: [1, 2, 3, 4] }
             ],
-            metadata: { count: 5 }
+            metadata: { }
           }
         )
       end
@@ -71,7 +71,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
             data: [
               { id: 4, bar: "4", data: [1, 2, 3, 4] }
             ],
-            metadata: { count: 5 }
+            metadata: { }
           }
         )
       end
@@ -84,7 +84,24 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
             data: [
               { id: 5, bar: "5", data: [1, 2, 3, 8] }
             ],
-            metadata: { count: 1 }
+            metadata: { }
+          }
+        )
+      end
+
+      it "with count" do
+        get "/foo?count=true"
+        expect(last_response.status).to eq(200)
+        expect(JSON.parse(last_response.body, symbolize_names: true)).to eq(
+          {
+            data: [
+              { id: 1, bar: "1", data: [1, 2, 3, 4] },
+              { id: 2, bar: "2", data: [1, 2, 3, 4] },
+              { id: 3, bar: "3", data: [1, 2, 3, 4] },
+              { id: 4, bar: "4", data: [1, 2, 3, 4] },
+              { id: 5, bar: "5", data: [1, 2, 3, 8] }
+            ],
+            metadata: { count: 5 }
           }
         )
       end
@@ -136,7 +153,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
                 bars: []
               }
             ],
-            metadata: { count: 5 }
+            metadata: { }
           }
         )
       end

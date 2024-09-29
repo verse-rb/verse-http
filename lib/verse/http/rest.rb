@@ -176,6 +176,7 @@ module Verse
             field?(:page, Integer).rule("must be positive"){ |v| v > 0 }
             field?(:per_page, Integer).rule("must be between 1 and 1000"){ |v| v > 0 && v < 1001 }
             field?(:sort, String)
+            field(:count, TrueClass).default(false)
             field?(:filter, Hash) do
               record.fields.each do |field|
                 next if blacklist_filters.include?(field[0])
@@ -204,7 +205,8 @@ module Verse
             included: included,
             page: params.fetch(:page, 1),
             items_per_page: params.fetch(:per_page, 100),
-            sort: params[:sort]
+            sort: params[:sort],
+            query_count: params[:count]
           )
         end
 
