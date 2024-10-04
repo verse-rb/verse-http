@@ -35,11 +35,19 @@ module Verse
           #
           # @return [Verse::Http::Auth::Token] The decoded token.
           def decode(token, validate: true, **opts)
-            payload, = JWT.decode(
-              token, sign_key, validate, { algorithm: sign_algorithm, **opts }
-            )
+            new(decode_payload(token, validate:, **opts))
+          end
 
-            new(payload)
+          # Decode a token and return the payload.
+          # @param token [String] The token to decode.
+          # @param validate [Boolean] Validate the token (check expiration, and other headers fields).
+          # @param opts [Hash] Options to pass to the JWT library.
+          #
+          # @return [Hash] The decoded payload.
+          def decode_payload(token, validate: true, **opts)
+            JWT.decode(
+              token, sign_key, validate, { algorithm: sign_algorithm, **opts }
+            ).first
           rescue JWT::DecodeError => e
             raise Verse::Error::Authorization, e.message
           end
