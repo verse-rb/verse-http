@@ -41,13 +41,17 @@ module Verse
           # Decode a token and return the payload.
           # @param token [String] The token to decode.
           # @param validate [Boolean] Validate the token (check expiration, and other headers fields).
+          # @param meta [Boolean] Return the metadata of the token.
           # @param opts [Hash] Options to pass to the JWT library.
           #
           # @return [Hash] The decoded payload.
+          # @return [Array] The decoded payload and metadata if meta is set to `true`.
           def decode_payload(token, validate: true, **opts)
-            JWT.decode(
+            payload = JWT.decode(
               token, sign_key, validate, { algorithm: sign_algorithm, **opts }
             ).first
+
+            payload
           rescue JWT::DecodeError => e
             raise Verse::Error::Authorization, e.message
           end
@@ -69,17 +73,18 @@ module Verse
 
         include Verse::Util::HashUtil
 
-        # The authentication context linked to this token.
-        attr_reader :context
+        # The authentication context linked to this token, and the expiration date.
+        attr_reader :context, :exp
 
         # Initialize the token and build the authentication context from it.
         def initialize(payload)
-          payload.values_at("u", "r", "s").tap do |user, role, scopes|
+          payload.values_at("u", "r", "s", "exp").tap do |user, role, scopes, exp|
             @context = Verse::Auth::Context.from_role(
               role,
               custom_scopes: deep_symbolize_keys(scopes),
               metadata: { **deep_symbolize_keys(user), role: role.to_sym }
             )
+            @exp = exp
           end
         end
       end

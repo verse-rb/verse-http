@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:verse-rb/verse-core.git
-  revision: a7283fb63cba2c19444a2df7d6984dd99245cc12
+  revision: 82b897a7e64154cea531bc1a0a6f1fe52e61aa82
   branch: master
   specs:
     verse-core (2.0.0)
@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git@github.com:verse-rb/verse-schema.git
-  revision: f404c701f75d640f0d120bdf51741c24f6327b78
+  revision: 0581105d8ecd5dc04df8f348e649068ebd1c9b78
   branch: master
   specs:
     verse-schema (0.1.0)
@@ -33,7 +33,7 @@ GEM
     bootsnap (1.18.3)
       msgpack (~> 1.2)
     coderay (1.1.3)
-    concurrent-ruby (1.3.3)
+    concurrent-ruby (1.3.5)
     crack (1.0.0)
       bigdecimal
       rexml
