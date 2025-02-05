@@ -26,6 +26,7 @@ RSpec.describe Verse::Http::Auth::Token do
 
       expect(token.context.metadata).to eq({ id: 1, name: "John Doe", role: :user })
       expect(token.context.custom_scopes).to eq({ users: [1, 2] })
+      expect(token.exp).to eq(in_one_hour)
     end
   end
 end
