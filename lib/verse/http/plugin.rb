@@ -4,10 +4,14 @@ module Verse
   module Http
     class Plugin < Verse::Plugin::Base
       class << self
-        attr_accessor :show_error_details
+        attr_accessor :show_error_details, :validate_output
 
         def show_error_details?
           @show_error_details
+        end
+
+        def validate_output?
+          @validate_output
         end
       end
 
@@ -17,11 +21,13 @@ module Verse
 
       def validate_config
         result = Config::Schema.validate(config)
+
+        unless result.success?
+          raise "Invalid config for http plugin: #{result.errors}"
+        end
+
         self.class.show_error_details = result.value.fetch(:show_error_details)
-
-        return if result.success?
-
-        raise "Invalid config for http plugin: #{result.errors}"
+        self.class.validate_output = result.value.fetch(:validate_output)
       end
 
       def on_init

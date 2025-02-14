@@ -77,8 +77,12 @@ module Verse
                 hook.method.bind(self).call
               end
 
-              hook.metablock.process_output(result)
-              renderer_instance.render(result, self)
+              if Verse::Http::Plugin.validate_output?
+                out = hook.metablock.process_output(result)
+                renderer_instance.render(out, self)
+              else
+                renderer_instance.render(result, self)
+              end
             end
           end
         end
