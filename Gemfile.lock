@@ -8,14 +8,6 @@ GIT
       thor (~> 1.2.1)
       verse-schema (~> 1.0.0)
 
-GIT
-  remote: git@github.com:verse-rb/verse-schema.git
-  revision: 8dddcce6f7e9937840c351f779f55e1bacf11173
-  branch: master
-  specs:
-    verse-schema (1.0.0)
-      attr_chainable (~> 1.0)
-
 PATH
   remote: .
   specs:
@@ -125,6 +117,8 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
+    verse-schema (1.0.0)
+      attr_chainable (~> 1.0)
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -148,7 +142,7 @@ DEPENDENCIES
   simplecov
   verse-core!
   verse-http!
-  verse-schema!
+  verse-schema (~> 1.0.0)
   webmock
   yard
 
