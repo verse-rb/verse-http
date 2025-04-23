@@ -21,8 +21,7 @@ module Verse
           @show_error_details = show_error_details
         end
 
-        def render_error(error, ctx)
-          server = ctx["verse.http.server"]
+        def render_error(error, server)
           server.content_type(server.content_type || "application/json")
 
           code = if error.class.respond_to?(:http_code)
@@ -46,8 +45,7 @@ module Verse
           end
         end
 
-        def render(result, ctx)
-          server = ctx["verse.http.server"]
+        def render(result, server)
           server.content_type(server.content_type || "application/json")
 
           if pretty

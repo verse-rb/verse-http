@@ -56,7 +56,8 @@ module Verse
                 renderer
               end
 
-            env["verse.http.server"] = self
+            server = self
+            env["verse.http.server"] = server
             env["verse.http.renderer"] = renderer_instance
 
             hook.auth.call(env) do |auth_context|
@@ -79,9 +80,9 @@ module Verse
 
               if Verse::Http::Plugin.validate_output?
                 out = hook.metablock.process_output(result)
-                renderer_instance.render(out, env)
+                renderer_instance.render(out, server)
               else
-                renderer_instance.render(result, env)
+                renderer_instance.render(result, server)
               end
             end
           end
