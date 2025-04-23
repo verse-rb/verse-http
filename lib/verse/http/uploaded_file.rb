@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Verse
   module Http
     UploadedFileStruct = Struct.new(:filename, :type, :name, :tempfile, :head, keyword_init: true)

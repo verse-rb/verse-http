@@ -50,7 +50,6 @@ module Verse
         service: :service,
         repository: :repo
       )
-
         if mod < Verse::Exposition::Base
           raise ArgumentError, "record is required" unless record
 

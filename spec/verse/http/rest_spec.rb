@@ -58,7 +58,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
               { id: 1, bar: "1", data: [1, 2, 3, 4] },
               { id: 2, bar: "2", data: [1, 2, 3, 4] }
             ],
-            metadata: { }
+            metadata: {}
           }
         )
       end
@@ -71,7 +71,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
             data: [
               { id: 4, bar: "4", data: [1, 2, 3, 4] }
             ],
-            metadata: { }
+            metadata: {}
           }
         )
       end
@@ -84,7 +84,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
             data: [
               { id: 5, bar: "5", data: [1, 2, 3, 8] }
             ],
-            metadata: { }
+            metadata: {}
           }
         )
       end
@@ -153,7 +153,7 @@ RSpec.describe Verse::Http::Rest, type: :exposition do
                 bars: []
               }
             ],
-            metadata: { }
+            metadata: {}
           }
         )
       end

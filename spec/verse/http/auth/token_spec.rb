@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Verse::Http::Auth::Token do
-
   let(:in_one_hour) { Time.now.to_i + 3600 }
   subject {
     Verse::Http::Auth::Token.encode(

@@ -47,11 +47,9 @@ module Verse
           # @return [Hash] The decoded payload.
           # @return [Array] The decoded payload and metadata if meta is set to `true`.
           def decode_payload(token, validate: true, **opts)
-            payload = JWT.decode(
+            JWT.decode(
               token, sign_key, validate, { algorithm: sign_algorithm, **opts }
             ).first
-
-            payload
           rescue JWT::DecodeError => e
             raise Verse::Error::Authorization, e.message
           end

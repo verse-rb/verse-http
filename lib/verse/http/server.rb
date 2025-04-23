@@ -13,7 +13,7 @@ module Verse
       before do
         content_type = request.env["CONTENT_TYPE"]
 
-        if content_type =~ /\Amultipart\/form-data/
+        if content_type =~ %r{\Amultipart/form-data}
           self.params = request.env["rack.request.form_hash"]
         else
           # Parse JSON Body and store in the params hash.
