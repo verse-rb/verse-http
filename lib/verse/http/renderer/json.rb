@@ -47,7 +47,8 @@ module Verse
         end
 
         def render(result, ctx)
-          ctx.content_type(ctx.content_type || "application/json")
+          server = ctx["verse.http.server"]
+          server.content_type(server.content_type || "application/json")
 
           if pretty
             JSON.pretty_generate(result)

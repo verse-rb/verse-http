@@ -79,9 +79,9 @@ module Verse
 
               if Verse::Http::Plugin.validate_output?
                 out = hook.metablock.process_output(result)
-                renderer_instance.render(out, self)
+                renderer_instance.render(out, env)
               else
-                renderer_instance.render(result, self)
+                renderer_instance.render(result, env)
               end
             end
           end

@@ -34,10 +34,6 @@ module Verse
         validate_config
 
         require_relative "../http"
-
-        Verse::Exposition::ClassMethods.prepend(
-          Verse::Http::Exposition::Extension
-        )
       end
 
       def on_start(_mode)

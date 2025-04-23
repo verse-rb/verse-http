@@ -37,15 +37,15 @@ module Verse
           @guess_type ||= detected_extension
         end
 
-        def render(result, ctx)
+        def render(result, server)
           return unless result
 
           result.rewind
 
           guess_type(result)
 
-          ctx.content_type @content_type || DEFAULT_CONTENT_TYPE
-          ctx.attachment create_attachment_name
+          server.content_type @content_type || DEFAULT_CONTENT_TYPE
+          server.attachment create_attachment_name
 
           result
         end

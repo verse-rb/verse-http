@@ -17,3 +17,6 @@ Dir["#{__dir__}/**/*.rb"].sort.each do |file|
 
   require_relative file
 end
+
+# Extend the Verse::Exposition::Base with the HTTP DSL
+Verse::Exposition::Base.extend(Verse::Http::Exposition::Extension)

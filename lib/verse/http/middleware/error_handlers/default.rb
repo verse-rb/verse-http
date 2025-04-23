@@ -4,7 +4,8 @@ require_relative "../error_handler"
 
 # Default handler, used when no handler is available
 Verse::Http::Middleware::ErrorHandler.rescue_from nil do |e, env|
-  renderer = env["verse.http.renderer"]
+  renderer  = env["verse.http.renderer"]
+  server    = env["verse.http.server"]
 
   code = if e.class.respond_to?(:http_code)
            e.class.http_code
@@ -13,7 +14,13 @@ Verse::Http::Middleware::ErrorHandler.rescue_from nil do |e, env|
          end
 
   if renderer.respond_to?(:render_error)
-    render renderer.render_error(e, env), status: code
+    output = renderer.render_error(e, server)
+
+    if server.response.status < 400 # If not set in the render_error block
+      server.response.status = code
+    end
+
+    render output, status: server.response.status
   else
     # Standard json error format
     error = {

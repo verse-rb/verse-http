@@ -18,8 +18,8 @@ module Verse
 
         attr_accessor :content_type
 
-        def render(result, ctx)
-          ctx.content_type content_type
+        def render(result, server)
+          server.content_type content_type
 
           return unless result
 
@@ -27,7 +27,7 @@ module Verse
 
           buffer_size = self.class.buffer_size
 
-          ctx.stream do |out|
+          server.stream do |out|
             until result.eof?
               data = result.read buffer_size
               out << data

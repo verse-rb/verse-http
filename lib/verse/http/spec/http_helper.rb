@@ -55,11 +55,11 @@ module Verse
                   headers["CONTENT_TYPE"] ||= "multipart/form-data"
                 else
                   headers["CONTENT_TYPE"] ||= "application/json"
-
-                  if headers["CONTENT_TYPE"] == "application/json"
-                    params = params.to_json
-                  end
                 end
+              end
+
+              if headers["CONTENT_TYPE"] == "application/json"
+                params = params.to_json
               end
 
               unflavored_method.call(path, params, headers)
