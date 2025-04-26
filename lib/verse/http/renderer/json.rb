@@ -30,6 +30,8 @@ module Verse
                    500
                  end
 
+          server.response.status = code
+
           result = {
             status: code.to_s,
             type: error.class.name,
