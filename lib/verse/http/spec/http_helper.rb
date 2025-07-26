@@ -49,14 +49,10 @@ module Verse
                 false
               }
 
-              if params.is_a?(Hash) && params.any?
+              if (params.is_a?(Hash) || params.is_a?(Array)) && params.any?
                 is_multipart = deep_check_multipart.call(params)
 
-                headers["CONTENT_TYPE"] ||= if is_multipart
-                                              "multipart/form-data"
-                                            else
-                                              "application/json"
-                                            end
+                headers["CONTENT_TYPE"] ||= is_multipart ? "multipart/form-data" : "application/json"
               end
 
               if headers["CONTENT_TYPE"] == "application/json"

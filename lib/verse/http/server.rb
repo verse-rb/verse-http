@@ -1,14 +1,44 @@
 # frozen_string_literal: true
 
-require "sinatra"
+require "roda"
 
 require_relative "middleware/error_handler"
 require_relative "middleware/logger_handler"
 
 module Verse
   module Http
-    class Server < Sinatra::Base
-      CONTENT_TYPE_REGEXP = /^((\w|[.-])+)\+((\w|[.-])+)$/i
+    class Server < Roda
+      CONTENT_TYPE_REGEXP = /^((\w|[.-])+)\+((\w|[.-])+)$/i.freeze
+
+      def self.add_route(method, path, &block)
+        @@routes ||= []
+        @@routes << [[path, method], block]
+      end
+
+      def self.build_route_tree(routes)
+        generate_routes
+      end
+
+      def insert_route(node, parts, method, block)
+        return node[method] = block if parts.empty?
+
+        key = parts.first.start_with?(':') ? [/^[^\/]+$/, parts.first[1:].to_sym] : parts.first
+        node[key] ||= {}
+        insert_route(node[key], parts[1..-1], method, block)
+      end
+
+
+      def tree_from_routes(routes)
+        route.each do |route|
+          route.path.split("/").first
+        end
+      end
+
+      def prepare(routes)
+        tree_from_routes(routes)
+        route do |r|
+        end
+      end
 
       before do
         content_type = request.env["CONTENT_TYPE"]
