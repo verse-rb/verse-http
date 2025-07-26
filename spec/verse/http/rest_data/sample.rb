@@ -8,7 +8,7 @@ module Spec
       field :bar
       field :data
 
-      has_many :bars, repository: "Spec::Rest::BarRepository"
+      has_many :bars, repository: "Spec::Rest::BarRepository", foreign_key: :foo_id
     end
 
     class FooRepository < Verse::Model::InMemory::Repository
@@ -21,7 +21,7 @@ module Spec
       field :foo_id, type: Integer
       field :value, type: String
 
-      belongs_to :foo, repository: FooRepository
+      belongs_to :foo, repository: FooRepository, foreign_key: :foo_id
     end
 
     class BarRepository < Verse::Model::InMemory::Repository
