@@ -17,9 +17,9 @@ module Verse
           self.params = request.env["rack.request.form_hash"]
         else
           # Parse JSON Body and store in the params hash.
-          request.body.rewind
+          request.body&.rewind
 
-          body_content = request.body.read
+          body_content = request.body&.read || ""
 
           first, second = content_type&.split("/")
 
@@ -62,6 +62,8 @@ module Verse
 
       configure do
         enable :show_exceptions
+
+        set :host_authorization, { permitted_hosts: [], allow_if: ->(env) { true } }
       end
 
       not_found do
