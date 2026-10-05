@@ -12,7 +12,7 @@ PATH
   remote: .
   specs:
     verse-http (0.1.0)
-      jwt (~> 2.7.1)
+      jwt (~> 2.10, >= 2.10.3)
       sinatra (~> 4.0)
 
 GEM
@@ -34,7 +34,8 @@ GEM
     docile (1.4.1)
     hashdiff (1.2.1)
     json (2.15.1)
-    jwt (2.7.1)
+    jwt (2.10.3)
+      base64
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
